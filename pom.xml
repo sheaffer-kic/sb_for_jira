@@ -27,20 +27,38 @@
         </dependency>
         <!-- Add dependency on jira-core if you want access to JIRA implementation classes as well as the sanctioned API. -->
         <!-- This is not normally recommended, but may be required eg when migrating a plugin originally developed against JIRA 4.x -->
-        <!--
+        
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>
-        -->
+       
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+               
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+            <scope>provided</scope>
+        </dependency>        
 
         <dependency>
             <groupId>com.atlassian.plugin</groupId>
@@ -70,6 +88,19 @@
             <version>1</version>
             <scope>provided</scope>
         </dependency>
+        
+		<dependency>
+			<groupId>com.atlassian.soy</groupId>
+			<artifactId>soy-template-renderer-api</artifactId>
+			<scope>provided</scope>
+		</dependency> 
+		
+		<dependency>
+			<groupId>com.atlassian.templaterenderer</groupId>
+			<artifactId>atlassian-template-renderer-api</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>         
         
         <!-- for ao test-->
         <dependency>
@@ -129,6 +160,21 @@
 			<version>1.0</version>
 			<scope>provided</scope> 	 
 		</dependency>  
+		
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.2</version>
+			<scope>provided</scope>    
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		    <version>2.5.6.SEC02</version>
+		    <scope>provided</scope>
+		</dependency>		
+				
         <!-- Uncomment to use TestKit in your project. Details at https://bitbucket.org/atlassian/jira-testkit -->
         <!-- You can read more about TestKit at https://developer.atlassian.com/display/JIRADEV/Plugin+Tutorial+-+Smarter+integration+testing+with+TestKit -->
         <!--
@@ -141,6 +187,32 @@
         -->
     </dependencies>
 
+   <dependencyManagement>
+        <dependencies>
+            <!-- <dependency>
+                <groupId>com.atlassian.platform</groupId>
+                <artifactId>platform</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.platform</groupId>
+                <artifactId>third-party</artifactId>
+                <version>${platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency> -->
+			<dependency>
+				<groupId>com.atlassian.jira</groupId>
+				<artifactId>jira-project</artifactId>
+				<version>${jira.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>   
+    
     <build>
         <plugins>
             <plugin>
@@ -190,15 +262,22 @@
 
                         <!-- Add package to export here com.kic.jira.sb.api,-->
                         <Export-Package>
-                             com.kic.jira.sb.api,
+                             com.kic.jira.sb.service,
                         </Export-Package>
 
                         <!-- Add package import here -->
-                        <Import-Package>
+<!--                         <Import-Package>
                             org.springframework.osgi.*;resolution:="optional",
                             org.eclipse.gemini.blueprint.*;resolution:="optional",
                             *
-                        </Import-Package>
+                        </Import-Package> -->
+                        
+                     <Import-Package>
+                            org.springframework.osgi.*;resolution:="optional",
+                            org.eclipse.gemini.blueprint.*;resolution:="optional",
+                            *;resolution:="optional"
+                        </Import-Package> 
+                                                                     
 
                         <!-- Ensure plugin is spring powered -->
                         <Spring-Context>*</Spring-Context>
@@ -228,12 +307,24 @@
                     <verbose>false</verbose>
                 </configuration>
             </plugin>
+            
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                	<encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>              
         </plugins>
     </build>
 
     <properties>
         <jira.version>7.2.12</jira.version>
+        <jira.software.application.version>7.2.2</jira.software.application.version>
         <amps.version>6.2.11</amps.version>
+        <plugins.version>4.0.4</plugins.version>
         <plugin.testrunner.version>1.2.3</plugin.testrunner.version>
         <atlassian.spring.scanner.version>1.2.13</atlassian.spring.scanner.version>
         <!-- This key is used to keep the consistency between the key in atlassian-plugin.xml and the key to generate bundle. -->
