@@ -50,6 +50,39 @@
         <dependency>com.atlassian.auiplugin:message</dependency>
     </web-resource>
     
+    
+    
+    <web-resource key="wr-issue-general-resource" name="wr-issue-general-resource">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+            
+    	<dependency>com.atlassian.auiplugin:ajs</dependency>
+    	<dependency>com.atlassian.auiplugin:aui-select2</dependency>
+    	<resource type="download" name="sb-general.js" location="/js/sb-general.js"/>
+    	<context>atl.general</context>
+    </web-resource>
+    
+    <web-resource key="wr-issue-create-resource" name="wr-issue-create-resource">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+            
+    	<dependency>com.atlassian.auiplugin:ajs</dependency>
+    	<resource type="download" name="sb-project1.js" location="/js/sb-project1.js"/>
+    	<context>jira.create.issue</context>
+    </web-resource>
+    
+    <web-resource key="wr-issue-view-resource" name="wr-issue-view-resource">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>    
+    	<dependency>com.atlassian.auiplugin:ajs</dependency>
+    	<resource type="download" name="sb-project2.js" location="/js/sb-project2.js"/>
+		<context>jira.view.issue</context>
+    </web-resource>   
+        
+    
  	<!-- Active Object -->     
     <ao key="ao-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
@@ -97,5 +130,10 @@
 			</action>			
   		</actions>
   	</webwork1>	
+  	
+  	
+  	<rest name="SmartBuilder Rest Resource" i18n-name-key="sb-rest-resource.name" key="sb-rest-resource" path="/sb" version="1.0">
+    	<description>The SmartBuilder Resource Plugin</description>
+  	</rest>    	
     
 </atlassian-plugin>
