@@ -1,0 +1,21 @@
+
+#foreach($list in $sbList)
+	#foreach($log in $list)
+		#if($log.projResult.indexOf("2") > 0)
+			#set ($href = "#")
+		#else
+			#set ($href = "$sbConfig.url?tagName=$tagName&projectId=$projectId")			
+		#end
+		
+		<a target="_blank" href="$href">
+			<span class='square-box-$log.projResult'/>
+			<span class="tooltiptext">
+				&nbsp;&nbsp;#$log.projResultId <br/> 
+				&nbsp;&nbsp;start time : $log.startTime <br/>
+				&nbsp;&nbsp;run time : $log.runTime
+			</span>
+		</a>
+				
+	#end
+	<br/>
+#end

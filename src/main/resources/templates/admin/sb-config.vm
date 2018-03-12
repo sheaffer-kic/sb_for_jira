@@ -1,0 +1,10 @@
+<html>
+    <head>
+        <title>SmartBuilder</title>
+        <meta name="decorator" content="atl.admin" />        		
+		$webResourceManager.requireResourcesForContext("sb-config-plugin")
+    </head>
+    <body>
+ 		#parse("templates/admin/sb-config-content.vm")
+    </body>
+</html>

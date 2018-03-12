@@ -1,0 +1,32 @@
+<section class="aui-page-panel-content">
+	<h2 class="custom-apps-title formtitle">Smart Builder Configuration</h2>
+	
+	<div id="aui-message-bar"></div>
+	
+	<form id="sb-submit-form" name="sb-submit-form" class="aui" method="post">		
+		<input type="hidden" name="id" id="id" value="$sbConfigContent.ID">
+		<div class="field-group">
+	        <label for="sbId">ID<span class="aui-icon icon-required">required</span></label>
+	        <input id="sbId" name="sbId" class="text" type="text" value="$sbConfigContent.sbId" data-aui-validation-field required="required" >
+		</div>		
+		<div class="field-group">
+	        <label for="PassWord">PassWord<span class="aui-icon icon-required">required</span></label>
+	        <input type="password" class="password" id="sbPassword" name="sbPassword" value="$sbConfigContent.sbPassword" data-aui-validation-field required="required" >
+		</div>
+		<div class="field-group">
+	        <label for="URL">URL<span class="aui-icon icon-required">required</span></label>
+	        <input class="text long-field" type="text" id="url" name="url" value="$sbConfigContent.url" data-aui-validation-field required="required" >
+	        <div  id="error_msg" class="error"></div>
+		</div>	
+	    <div class="buttons-container">
+		    <div class="buttons">
+				<button id="save-sb-submit-button" class="aui-button">Save</button>
+				<span>&nbsp;&nbsp;&nbsp;</span>
+				#if($sbConfigContent.ID > 0)
+				<a href="#" id="delete-sb-submit-button">Delete</a>	
+				#end        
+		    </div>
+	    </div>
+
+	</form>
+</section>

@@ -1,0 +1,77 @@
+
+
+	.square-box-S1{
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin: 0px;
+	    border: 3px solid #4679BD; 
+	    background:#4679BD;
+	    padding:2px;	
+	}
+
+	.square-box-F1{
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin: 0px;
+	    border: 3px solid #FF0000; 
+	    background:#FF0000;
+	    padding:2px;
+	}
+
+	.square-box-I{
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin: 0px;
+	    border: 3px solid #ffff04; 
+	    background:#ffff04;
+	    padding:2px;
+	}
+	
+	.square-box-S2{
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin: 0px;
+	    border: 3px dotted #4679BD; 
+	    background:#ffffff;	
+	    padding:2px;
+	}
+
+	.square-box-F2{
+	    display: inline-block;
+	    width: 20px;
+	    height: 20px;
+	    margin: 0px;
+	    border: 3px dotted #FF0000; 
+	    background:#ffffff;
+	    padding:2px;
+	}
+
+	a {
+	    position: relative;
+	}
+	
+	a .tooltiptext {
+	    visibility: hidden;
+	    width: 220px;
+	    background-color: black;
+	    color: #fff;
+	    text-align: left;
+	    border-radius: 6px;
+	    padding: 10px 0;
+	
+	    /* Position the tooltip */
+	    position: absolute;
+	    z-index: 1;	    
+	
+	    top: 100%;
+	    left: 50%; 
+	    margin-left: -30px; /* Use half of the width (120/2 = 60), to center the tooltip */		    
+	}
+	
+	a:hover .tooltiptext {
+	    visibility: visible;
+	}	

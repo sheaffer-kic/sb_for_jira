@@ -1,0 +1,101 @@
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}" />
+        <param name="plugin-icon">images/pluginIcon.png</param>
+        <param name="plugin-logo">images/pluginLogo.png</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="sb-plugin"/>
+    
+    <!-- add our web resources -->
+    <!-- admin>smartbuilder config menu -->
+    <web-resource key="wr-sb-config-resources" name="wr-sb-config-resources">
+         <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+
+		<dependency>${atlassian.plugin.key}:common-resources</dependency>
+		
+        <resource type="download" name="sb-config.css" location="/css/sb-config.css"/>
+        <resource type="download" name="sb-config.js" location="/js/sb-config.js"/>             
+        <context>sb-config-plugin</context>
+    </web-resource>
+    
+    <!-- issue>right menu -->
+    <web-resource key="wr-build-result-resources" name="wr-build-result-resources">
+         <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+     
+        <dependency>${atlassian.plugin.key}:common-resources</dependency> 
+              
+        <resource type="download" name="build-result.css" location="/css/build-result.css"/>
+        <resource type="download" name="build-result.js" location="/js/build-result.js"/>
+        <!-- <context>build-result-plugin</context> -->
+        <context>jira.view.issue</context>
+    </web-resource>    
+ 
+     <web-resource name="common-resources" key="common-resources">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+        
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <dependency>com.atlassian.auiplugin:dialog2</dependency>
+		<dependency>com.atlassian.auiplugin:aui-form-validation</dependency>
+		<dependency>com.atlassian.auiplugin:aui-form-notification</dependency>
+        <dependency>com.atlassian.auiplugin:message</dependency>
+    </web-resource>
+    
+ 	<!-- Active Object -->     
+    <ao key="ao-module">
+        <description>The module configuring the Active Objects service used by this plugin</description>
+        <entity>com.kic.jira.sb.ao.SbConfig</entity>
+    </ao> 
+         
+    <!-- key name 규칙 추후... 일단 sb포함 -->
+	<!-- issue 의 오른쪽영역 하단..   atl.jira.view.issue.right.context
+	weight 화면순서
+	-->
+	<!-- (issue > rigth bootn) -->
+  	<web-panel name="wp-build-result" i18n-name-key="i18n" key="wp-build-result" 
+  			location="atl.jira.view.issue.right.context" weight="100">
+	  	<label>SmartBuilder</label>
+	    <description>SmartBuilder for Jira Plugin</description>	
+	    <context-provider class="com.kic.jira.sb.webpanel.BuildResultContextProvider"/>    
+	    <resource name="view" type="velocity" location="templates/issue/build-result.vm"/>
+	    <condition class="com.kic.jira.sb.conditions.BuildResultConditions" /><!-- 파라메터로 buiss type -->
+	</web-panel>  
+	
+
+  	
+    <!-- (Admin > Application) -->
+	<web-section key="ws-sb-config" name="ws-sb-config" location="admin_applications_section">
+		<description>SmartBuilder</description>
+		<label>SmartBuilder</label>
+	</web-section> 
+	    
+	<web-item key="wi-sb-config" name="wi-sb-config"
+				section="admin_applications_section/ws-sb-config" 
+				weight="900">
+		<description>SmartBuilder</description>				
+		<label>SmartBuilder</label>
+		<link linkId="wi-sb-config-id">
+				/secure/admin/SbConfig!default.jspa
+		</link>
+	</web-item> 
+	
+	<webwork1 key="ww-sb-config" name="ww-sb-config">
+  		<description>SmartBuilder</description>
+  		<actions>
+			<action name="com.kic.jira.sb.webwork.SbConifgWebWork"
+			        alias="SbConfig">
+  				<view name="success">templates/admin/sb-config.vm</view>			
+			</action>			
+  		</actions>
+  	</webwork1>	
+    
+</atlassian-plugin>

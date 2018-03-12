@@ -1,0 +1,7 @@
+<div>
+    #if($sbError)
+    	#parse("templates/issue/build-result-error.vm")
+    #else
+ 		#parse("templates/issue/build-result-content.vm")
+ 	#end
+</div>

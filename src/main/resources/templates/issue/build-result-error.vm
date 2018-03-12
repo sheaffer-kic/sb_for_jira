@@ -1,0 +1,6 @@
+<div class="aui-message aui-message-error">
+    <p class="title">
+        <strong>Error!</strong>
+    </p>
+    <p>$sbError</p>
+</div>
