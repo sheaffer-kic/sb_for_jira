@@ -87,9 +87,9 @@
     <ao key="ao-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>com.kic.jira.sb.ao.SbConfig</entity>
-        <entity>com.kic.jira.sb.ao.sbIntegrationConfig</entity>
+        <entity>com.kic.jira.sb.ao.SbIntegrationConfig</entity>
     </ao> 
-         
+
     <!-- key name 규칙 추후... 일단 sb포함 -->
 	<!-- issue 의 오른쪽영역 하단..   atl.jira.view.issue.right.context
 	weight 화면순서
