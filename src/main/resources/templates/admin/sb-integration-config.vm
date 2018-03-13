@@ -1,0 +1,16 @@
+
+
+##enable_html_escaping()
+<html>
+    <head>
+        <title>Setting SmartBuilder Project</title>
+        <meta name="decorator" content="atl.admin" /> 
+		<meta name="admin.active.tab" content="sbIntegrationSet"/>
+        <meta name="admin.active.section" content="atl.jira.proj.config"/> 
+        <meta name="projectKey" content="${projectKey}"/>   
+		$webResourceManager.requireResourcesForContext("sb-integration-config-plugin")
+    </head>
+    <body>
+ 		#parse("templates/admin/sb-integration-config-content.vm")
+    </body>
+</html>

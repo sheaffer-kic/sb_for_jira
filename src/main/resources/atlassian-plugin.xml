@@ -87,6 +87,7 @@
     <ao key="ao-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>com.kic.jira.sb.ao.SbConfig</entity>
+        <entity>com.kic.jira.sb.ao.sbIntegrationConfig</entity>
     </ao> 
          
     <!-- key name 규칙 추후... 일단 sb포함 -->
@@ -132,6 +133,43 @@
   	</webwork1>	
   	
   	
+  	<!-- [Start] SmartBuilder Integration Setting -->
+    <web-resource key="wr-sb-integration-config-resources" name="wr-sb-integration-config-resources">
+         <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+
+		<dependency>${atlassian.plugin.key}:common-resources</dependency>
+		
+        <resource type="download" name="sb-integration-config.js" location="/js/sb-integration-config.js"/>             
+        <context>sb-integration-config-plugin</context>
+    </web-resource>
+    
+	<!--  project config area. -->  	      		  	
+	<web-section key="ws-sb-integration-config" name="ws-sb-integration-config" location="atl.jira.proj.config" weight="150">
+		<description>Setting SmartBuilder Project</description>
+	</web-section>   	
+	
+	<web-item key="wi-sb-integration-config" name="wi-sb-integration-config" section="atl.jira.proj.config/ws-sb-integration-config" 
+				 weight="100">
+		<label>SmartBuilder Integration</label>
+		<link linkId="sbIntegrationSet">
+				/secure/SbIntegrationConfig!default.jspa?projectKey=$projectKeyEncoded
+		</link>
+		<condition class="com.kic.jira.sb.conditions.BuildResultConditions" />
+	</web-item>	
+  	
+  	<webwork1 key="ww-sb-integration-config" name="ww-sb-integration-config">
+  		<description>Setting SmartBuilder Project</description>
+  		<actions>
+			<action name="com.kic.jira.sb.webwork.SbIntegrationConifgWebWork"
+			        alias="SbIntegrationConfig">
+  				<view name="success">templates/admin/sb-integration-config.vm</view>		
+			</action>			
+  		</actions>
+  	</webwork1>
+  	<!-- [End] SmartBuilder Project Setting -->
+  	  	
   	<rest name="SmartBuilder Rest Resource" i18n-name-key="sb-rest-resource.name" key="sb-rest-resource" path="/sb" version="1.0">
     	<description>The SmartBuilder Resource Plugin</description>
   	</rest>    	

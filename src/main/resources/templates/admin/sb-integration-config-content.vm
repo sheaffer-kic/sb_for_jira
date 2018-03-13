@@ -1,0 +1,8 @@
+<section class="aui-page-panel-content">
+	<h2 class="custom-apps-title formtitle">SmartBuild Integration Configuration</h2>
+	
+	[추가버튼]<br/>
+	목록화면. projectKey : ${projectKey}<br/>
+	
+	</h2>
+</select
