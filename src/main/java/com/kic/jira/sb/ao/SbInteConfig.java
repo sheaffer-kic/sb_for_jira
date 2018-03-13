@@ -4,9 +4,9 @@ import net.java.ao.Entity;
 import net.java.ao.Preload;
 import net.java.ao.schema.Table;
 
-@Table("sbIntegrationConfig")
+@Table("sbInteConfig")
 @Preload
-public interface SbIntegrationConfig extends Entity {
+public interface SbInteConfig extends Entity {
 	
 	//projectKey
 	String getProjectKey();

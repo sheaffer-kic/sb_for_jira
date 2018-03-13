@@ -87,7 +87,7 @@
     <ao key="ao-module">
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>com.kic.jira.sb.ao.SbConfig</entity>
-        <entity>com.kic.jira.sb.ao.SbIntegrationConfig</entity>
+        <entity>com.kic.jira.sb.ao.SbInteConfig</entity>
     </ao> 
 
     <!-- key name 규칙 추후... 일단 sb포함 -->
