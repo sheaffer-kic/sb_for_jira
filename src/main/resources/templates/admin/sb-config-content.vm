@@ -18,6 +18,15 @@
 	        <input class="text long-field" type="text" id="url" name="url" value="$sbConfigContent.url" data-aui-validation-field required="required" >
 	        <div  id="error_msg" class="error"></div>
 		</div>	
+		<div class="field-group">
+	        <label for="cfId">aCustomFiled For SmartBuilder Project<span class="aui-icon icon-required">required</span></label>
+
+        
+	        <select class="select" id="cfId" name="cfId">
+			</select>
+
+		</div>
+				
 	    <div class="buttons-container">
 		    <div class="buttons">
 				<button id="save-sb-submit-button" class="aui-button">Save</button>

@@ -39,7 +39,7 @@ var SB_INCLUDER = {
             //var actionId = "action_id_41";            
             var contextPath =$("meta[name='ajs-context-path']").attr('content');
     		var url = contextPath + "/rest/sb/1.0/project/list";
-    		var actionId = "";
+    		var actionId = "action_id_41";
     		$.ajax({
     			type: 'get',
     			url: url ,

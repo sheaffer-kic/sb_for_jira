@@ -17,6 +17,7 @@
             <transformer key="jsI18n" />
         </transformation>
 
+     	<dependency>com.atlassian.auiplugin:aui-select2</dependency>
 		<dependency>${atlassian.plugin.key}:common-resources</dependency>
 		
         <resource type="download" name="sb-config.css" location="/css/sb-config.css"/>
@@ -29,7 +30,7 @@
          <transformation extension="js">
             <transformer key="jsI18n" />
         </transformation>
-     
+    
         <dependency>${atlassian.plugin.key}:common-resources</dependency> 
               
         <resource type="download" name="build-result.css" location="/css/build-result.css"/>

@@ -1,14 +1,36 @@
-
+var SB_CONFIG = {	
+	sb_project: function (contextPath) {	
+		var url = contextPath + "/rest/sb/1.0/config/sw/project/cf/list";
+		$.ajax({
+			type: 'GET',
+			url: url ,
+			async: false,
+			success: function(data, textStatus, response) {
+				$.each(data, function(key) {
+					var info = data[key];
+					$('#cfId').append(AJS.$('<option>', { 
+				        value: info.id,
+				        text : info.key 
+				    }));									
+				});
+				$('#cfId').auiSelect2();
+			},
+			error :function(response, textStatus, errorThrown) {
+				alert("code :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+			}		
+		});			
+	}
+};
 
 AJS.toInit(function(){
 	var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
+	SB_CONFIG.sb_project(contextPath);
 
 	AJS.$("#delete-sb-submit-button").click(function(e) {
 		var id = AJS.$('#id').val();
 		fn_delete(id);
 	});	
 	
-
 	AJS.$('#sb-submit-form').on('aui-valid-submit', function(event) {
 	    event.preventDefault();
 
@@ -22,9 +44,8 @@ AJS.toInit(function(){
 			fn_update(id);
 		}	    
 	});	
-
-	
 });
+	
 
 
 function fn_insert() {

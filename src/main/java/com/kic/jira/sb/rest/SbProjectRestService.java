@@ -35,7 +35,6 @@ public class SbProjectRestService {
 	public List<Map<String, Object>> getProjectList()  throws Exception {
 		logger.debug("###[START] get SmartBuilder ProjectList ###");
 		
-    	List<Map<String, Object>> projectList = new ArrayList<Map<String, Object>> ();
     	
     	
 		
@@ -69,25 +68,25 @@ public class SbProjectRestService {
         
         //getHttpResponseForSb(Map<String, Object> sbMap,  //jobUrl
     	
-    	
-/*    	Map<String, String> projectMap = new HashMap<String, String>();
+    	List<Map<String, Object>> projectList = new ArrayList<Map<String, Object>> ();
+    	Map<String, Object> projectMap = new HashMap<String, Object>();
     	projectMap.put("id", "project01");
     	projectMap.put("text", "project01");    	
     	projectList.add(projectMap);
     	
     	
-    	projectMap = new HashMap<String, String>();
+    	projectMap = new HashMap<String, Object>();
     	projectMap.put("id", "project02");
     	projectMap.put("text", "project02");    	
     	projectList.add(projectMap);
     	
     	
-    	projectMap = new HashMap<String, String>();
+    	projectMap = new HashMap<String, Object>();
     	projectMap.put("id", "aaproject03");
     	projectMap.put("text", "aaproject0355");    	
     	projectList.add(projectMap);
-    	logger.debug("###[END] get SmartBuilder ProjectList ###");*/
+    	logger.debug("###[END] get SmartBuilder ProjectList ###");
 		
-		return null;
+		return projectList;
 	}
 }
