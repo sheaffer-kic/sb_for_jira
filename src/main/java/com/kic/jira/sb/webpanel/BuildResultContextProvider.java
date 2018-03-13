@@ -131,7 +131,7 @@ public class BuildResultContextProvider implements ContextProvider{
 				
 				String result = jsonObj.get("result").toString();				
 				
-				if(result.equals("no")){
+				if(result.equals("fail")){
 					String resultMsg = jsonObj.get("message").toString();
 					rtnMap.put("sbError", resultMsg);
 					return rtnMap; 
