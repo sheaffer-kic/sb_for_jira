@@ -1,0 +1,31 @@
+package com.kic.jira.sb.vo;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlElement;
+
+public class ActionVo  implements Serializable {
+	private static final long serialVersionUID = 1333748028573140438L;
+
+	@XmlElement(name = "id")
+	private int id;
+	
+	@XmlElement(name = "name")
+	private String name;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	} 
+}
