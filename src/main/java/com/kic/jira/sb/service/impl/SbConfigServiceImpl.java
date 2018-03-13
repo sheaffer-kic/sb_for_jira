@@ -16,15 +16,15 @@ import com.kic.jira.sb.vo.SbConfigVo;
 
 @Transactional
 @Named
-public class DefaultSbConfigService implements SbConfigService{
+public class SbConfigServiceImpl implements SbConfigService{
 
-	private static final Logger logger = LoggerFactory.getLogger(DefaultSbConfigService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SbConfigServiceImpl.class);
 	
 	private final SbConfigDAO sbConfigDAO;
 	private final I18nResolver i18nResolver;
 	
 	@Inject
-	public DefaultSbConfigService(SbConfigDAO sbConfigDAO,
+	public SbConfigServiceImpl(SbConfigDAO sbConfigDAO,
 							  @ComponentImport I18nResolver i18nResolver) {
 		this.sbConfigDAO = sbConfigDAO;
 		this.i18nResolver = i18nResolver;
