@@ -37,48 +37,69 @@ var SB_INCLUDER = {
 		});			
 	},
 
-	sb_build: function(issueId, $contextObject) {			
+	sb_build: function(issueId, $contextObject) {
+		//var actionId = "action_id_41";
+		var actionId = "";
 		if (SB_INCLUDER._cacheBuild[issueId] == null) {
             SB_INCLUDER._cacheBuild[issueId] = {};
-            //alert ("null");
             
-            //issueId를 가지고  actionId(action_id_41) 를 가져올지 결정한다. (rest 에서 결정, 세팅할 필요없으면 cacheBuild[issueId]이  X 값 세팅 )
-            //action_id_41 :: rest 에서 가져온값.            
-            //var actionId = "action_id_41";            
-            //var contextPath =$("meta[name='ajs-context-path']").attr('content');
-/*    		var url = contextPath + "/rest/sb/1.0/project/list";
-    		var actionId = "action_id_41";
+    		var url = contextPath + "/rest/sb/1.0/project/build/action/id/" + issueId;
+    		//var actionId = "action_id_41";
     		$.ajax({
     			type: 'get',
     			url: url ,
     			async: false,
-    			success: function(data, textStatus, response) {
-    				actionId = "action_id_41";
-    				SB_INCLUDER._cacheBuild[issueId] = actionId;
-    	            
+    			success: function(data, textStatus, response) {    				
+    				if (data.result == "ok") {
+    					actionId = "action_id_" + data.actionId;
+    				}     				
+    				SB_INCLUDER._cacheBuild[issueId] = actionId;    				
     			},
     			error :function(response, textStatus, errorThrown) {
     				alert("code33 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
     			}		
-    		});  */  		
+    		});    		
 		}
 		
-		SB_INCLUDER.sb_build_execute("action_id_41", $contextObject );
+		actionId = SB_INCLUDER._cacheBuild[issueId] ;
+		if (actionId != "") {
+			SB_INCLUDER.sb_build_execute(actionId, issueId, $contextObject );
+		}
 		
 	}, 
 	
-	sb_build_execute: function (actionId, $contextObject) {
+	sb_build_execute: function (actionId, issueId, $contextObject) {
 		SB_INCLUDER.$contextObject = $contextObject;
 		
 		$("#" + actionId).click(function () {
-			alert ("TTTTTTaaa3333 :: " + actionId);
-			location.reload();
-			return false;			
+    		var url = contextPath + "/rest/sb/1.0/project/execute/build";
+    		var obj = new Object();
+    		obj.issueId = issueId;
+
+    		var reload = false;
+    		$.ajax({
+    			type: 'POST',
+    			url: url ,
+    			async: false,
+    			data: JSON.stringify(obj),		
+    		    dataType: "json",     
+    		    contentType: "application/json; charset=utf-8",     			
+    			success: function(data, textStatus, response) {    				
+    				alert (JSON.stringify(data));
+    				//location.reload();
+    				reload = true;
+    			},
+    			error :function(response, textStatus, errorThrown) {
+    				alert("code33 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+    			}		
+    		});  
+	
+    		if (reload) location.reload();
+    		return false;
 		});
 		
 	}
 };
-
 
 (function ($) {
     AJS.toInit(function () {

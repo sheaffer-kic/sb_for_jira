@@ -3,6 +3,7 @@ package com.kic.jira.sb.rest;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +34,25 @@ import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.atlassian.jira.component.ComponentAccessor;
+import com.atlassian.jira.issue.IssueManager;
+import com.atlassian.jira.issue.issuetype.IssueType;
+import com.atlassian.jira.issue.status.Status;
+import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONObject;
+import com.atlassian.jira.workflow.JiraWorkflow;
+import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.kic.jira.sb.service.SbConfigService;
+import com.kic.jira.sb.vo.ActionVo;
+import com.kic.jira.sb.vo.IssueStatusVo;
+import com.kic.jira.sb.vo.IssueTypeVo;
+import com.kic.jira.sb.vo.SbIntegrationConfigVo;
+import com.opensymphony.workflow.loader.ActionDescriptor;
+import com.opensymphony.workflow.loader.StepDescriptor;
 
 
 //@AnonymousAllowed
@@ -43,7 +60,55 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 @Path("test")
 public class TestRestService {
 	
+	private final TestDAO testDAO;
+	
+	public TestRestService(TestDAO testDAO) {
+		this.testDAO = testDAO;
+	}
+	
 	private static final Logger logger = LoggerFactory.getLogger(TestRestService.class);
+	
+	
+	//localhost:2990/jira/rest/sb/1.0/test/save/inte/config
+	@GET
+    @Path("/save/inte/config")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Map<String, String> saveSbInteConfg() throws Exception {
+		Map<String, String> rtnMap = new HashMap<String, String>();
+		rtnMap.put("result", "ok");
+		
+/*		SbIntegrationConfigVo sbInteConfigVo = new SbIntegrationConfigVo();
+		sbInteConfigVo.setProjectKey("SCRUM01");
+		sbInteConfigVo.setIssueType("10002");
+		
+		sbInteConfigVo.setBuildTargetId(10003);
+		sbInteConfigVo.setBuildTargetName("개발완료");
+		sbInteConfigVo.setBuildStepId(3);
+		
+		sbInteConfigVo.setBuildProgressId(10004);
+		sbInteConfigVo.setBuildProgressName("빌드중");
+		sbInteConfigVo.setBuildProgressAction(41);
+		
+		sbInteConfigVo.setBuildSuccessId(51);
+		sbInteConfigVo.setBuildSuccessName("빌드성공");
+		
+		sbInteConfigVo.setBuildFailId(61);
+		sbInteConfigVo.setBuildFailName("빌드실패");
+		
+		testDAO.insertSbInteConfig(sbInteConfigVo);*/
+		
+		rtnMap.put("message", "now not insert !!!");
+		return rtnMap;
+	}
+	
+	//localhost:2990/jira/rest/sb/1.0/test/info/inte/config/SCRUM01/10002
+	@GET
+    @Path("/info/inte/config/{projectKey}/{issueType}")
+	@Produces({MediaType.APPLICATION_JSON})
+	public SbIntegrationConfigVo getSbInteConfg(@PathParam("projectKey") String projectKey, 
+												@PathParam("issueType") String issueType) throws Exception {
+		return testDAO.selectSbInteConfig(projectKey, issueType);
+	}	
 	
 	//localhost:2990/context/rest/sb/1.0/test/list/
 	@GET
@@ -130,5 +195,144 @@ public class TestRestService {
 	public Map<String, String> getCustomerById(@PathParam("id") int id) {
 		
 	}*/
+	
+	
+	//http://localhost:2990/jira/rest/sb/1.0/test/issuetype/SCRUM01
+	
+	@GET
+    @Path("/issuetype/{projectKey}")
+	@Produces({MediaType.APPLICATION_JSON})	
+	public List<IssueTypeVo> getIssueTypeByProjectKey (@PathParam("projectKey") String projectKey) {
+		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
+		
+		if (project == null) {
+	        if (logger.isDebugEnabled())
+	            logger.debug("Project is null");
+	        return null;
+	    }
 
+	    List<IssueTypeVo> projIssueTypeList = new ArrayList<IssueTypeVo>();
+
+	    // long projectId = project.getId();
+	    Collection<IssueType> issueTypes = project.getIssueTypes();
+
+	    for (IssueType it : issueTypes) {
+	        IssueTypeVo vo = new IssueTypeVo();
+	        vo.setId(it.getId());
+	        vo.setName(it.getName());
+	        projIssueTypeList.add(vo);
+	    }	
+	    
+	    
+	    return projIssueTypeList;
+	}
+
+	//http://localhost:2990/jira/rest/sb/1.0/test/status/SCRUM01/10002
+	@GET
+    @Path("/status/{projectKey}/{issueTypeId}")
+	@Produces({MediaType.APPLICATION_JSON})		
+	public List<IssueStatusVo> getProjStatusOfIssueType(@PathParam("projectKey") String projectKey, 
+								@PathParam("issueTypeId") String issueTypeId) throws Exception {
+		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
+		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  		
+		long projectId = project.getId();
+		JiraWorkflow jwf = workflowManager.getWorkflow(projectId, issueTypeId);		
+		List<Status> statusList = jwf.getLinkedStatusObjects();	
+		List<IssueStatusVo> issueTypeStatusList = new ArrayList<IssueStatusVo>();
+		
+		for (Status s : statusList) {
+			IssueStatusVo vo = new IssueStatusVo();
+			vo.setId(s.getId());
+			vo.setStepId(jwf.getLinkedStep(s).getId());
+			vo.setName(s.getName());
+			issueTypeStatusList.add(vo);
+		}
+		//return Response.ok(workTypeStatusList, MediaType.APPLICATION_JSON).build();		
+		return issueTypeStatusList;
+	}	
+	
+
+	//http://localhost:2990/jira/rest/sb/1.0/test/next/status/SCRUM01/10002/3
+	
+	@GET
+    @Path("/next/status/{projectKey}/{issueTypeId}/{stepId}")
+	@Produces({MediaType.APPLICATION_JSON})		
+	public List<IssueStatusVo> getNextStatusOfStep(@PathParam("projectKey") String projectKey, 
+													     @PathParam("issueTypeId") String issueTypeId,  
+													     @PathParam("stepId") int stepId) throws Exception {
+		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
+		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  
+		
+		long projectId = project.getId();
+		JiraWorkflow jwf = workflowManager.getWorkflow(projectId, issueTypeId);		
+
+		List<Status> statusList = jwf.getLinkedStatusObjects();	
+				
+		// Collection<StepDescriptor> stepList = jwf.getStepsForTransition(act);  //해당 액션을 수행하는 단계 (step 입장에서는  out action)		
+		StepDescriptor step = jwf.getDescriptor().getStep(stepId);
+		//해당단계가 수행하는 액션
+		List<ActionDescriptor> listAction = step.getActions();
+		List<IssueStatusVo> issueTypeStatusList = new ArrayList<IssueStatusVo>();
+		
+		for (ActionDescriptor act : listAction) {			
+			for (Status status : statusList) {
+				StepDescriptor stepDesc = jwf.getLinkedStep(status);
+				Collection<ActionDescriptor> actList = jwf.getActionsWithResult(stepDesc); //step 입장에서는 in action 임
+				
+				for (ActionDescriptor actDesc : actList) {
+					if (actDesc.getName().equals(act.getName())) {
+						IssueStatusVo vo = new IssueStatusVo();
+						vo.setId(status.getId());
+						vo.setName(status.getName());
+						vo.setActionId(act.getId());
+						
+						issueTypeStatusList.add(vo);
+						break;
+					}
+				}
+			}
+
+		}
+		return issueTypeStatusList;
+	}	
+	
+	
+	
+	/*
+	 * 특정 issue type > 특정상태 > 액션 목록 가져오기.
+	 * http://localhost:2990/jira/rest/sb/1.0/test/action/SCRUM01/10002/10004
+	 */
+	@GET
+    @Path("/action/{projectKey}/{issueTypeId}/{statusId}")
+	@Produces({MediaType.APPLICATION_JSON})		
+	public List<ActionVo> getActionList(@PathParam("projectKey") String projectKey, 
+	                                    @PathParam("issueTypeId") String issueTypeId, 
+	                                    @PathParam("statusId") String statusId  ) throws Exception {
+		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
+		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  
+		
+		long projectId = project.getId();
+
+		JiraWorkflow jwf = workflowManager.getWorkflow(projectId, issueTypeId);				
+		List<Status> statusList = jwf.getLinkedStatusObjects();	
+		
+		List<ActionVo> actionList = new ArrayList<ActionVo>();
+		for (Status s : statusList) {
+			if (s.getId().equals(statusId)) {
+				StepDescriptor stepDesc = jwf.getLinkedStep(s);	 
+				List<ActionDescriptor> listAction = stepDesc.getActions();
+				
+				for (ActionDescriptor act : listAction) {
+					ActionVo vo = new ActionVo();
+					vo.setId(act.getId());
+					vo.setName(act.getName());
+					actionList.add(vo);
+				}
+				break;
+			}
+		}
+		//return Response.ok(actionList, MediaType.APPLICATION_JSON).build();
+		
+		return actionList;
+	}	
 }
