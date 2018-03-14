@@ -1,9 +1,8 @@
 package com.kic.jira.sb.rest;
 
+import java.net.URI;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -11,16 +10,43 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.ws.rs.GET;
+import javax.servlet.http.HttpSession;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.atlassian.jira.issue.IssueManager;
+import com.atlassian.jira.project.Project;
+import com.atlassian.jira.project.ProjectManager;
+import com.atlassian.jira.util.json.JSONArray;
+import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.kic.jira.sb.service.SbConfigService;
+import com.kic.jira.sb.util.SbPluginUtil;
+import com.kic.jira.sb.vo.SbConfigVo;
+import com.kic.jira.sb.vo.SbProjectVo;
+
+import java.util.List;
 
 
 @Scanned 
@@ -28,65 +54,70 @@ import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 public class SbProjectRestService {
 	private static final Logger logger = LoggerFactory.getLogger(SbProjectRestService.class);
 	
+	private static final String SB_PROJECT_REST = "/rest/project/list/for/external";
 	
-	@GET
+	private final ProjectManager projectManager;
+	private final IssueManager issueManager;
+	private final SbConfigService sbConfigService;
+	
+	public SbProjectRestService(@ComponentImport ProjectManager projectManager,
+								@ComponentImport IssueManager issueManager,
+								SbConfigService sbConfigService) {
+		this.projectManager = projectManager;
+		this.issueManager = issueManager;
+		this.sbConfigService = sbConfigService;
+	}
+	
+	
+	
+	@POST
     @Path("/list")
-	@Produces({MediaType.APPLICATION_JSON})	
-	public List<Map<String, Object>> getProjectList()  throws Exception {
+	@Produces({MediaType.APPLICATION_JSON})
+	public Map<String, Object> getProjectList(String param)  throws Exception {
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("result", "ok");
 		logger.debug("###[START] get SmartBuilder ProjectList ###");
-		
-    	
-    	
-		
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-        };
 
-        HostnameVerifier hostnameVerifier = new HostnameVerifier(){
-			@Override
-			public boolean verify(String hostname, SSLSession session) {
-				// TODO Auto-generated method stub
-				return true;
-			}
-        };
+    	JSONObject json = new JSONObject(param);
+    	int flag = json.getInt("flag");
+    	String value = json.getString("value").trim();
+    	
+    	Project project = null;
+    	if (flag == 1) project = projectManager.getProjectObjByName(value); //프로젝트명을 넘겼으면..
+    	else project = issueManager.getIssueObject(Long.parseLong(value)).getProjectObject();  //issue 로 넘겼을때..
+    	
+    	//software 유형이 아닌경우는 수행 하지 않음.
+    	if(!project.getProjectTypeKey().getKey().equals("software"))  {
+    		rtnMap.put("result", "warn");
+    		rtnMap.put("message", "Project type should be software !!!");
+    		return rtnMap;
+    	}
+    	
+    	//SmartBuilder config 정보 가져오기..
+    	SbConfigVo sbConfigVo = sbConfigService.getSelectSbConfig();
+    	rtnMap.put("cfId", sbConfigVo.getSbCfId());
+    	
+        Map<String, Object> httpMap = new HashMap<String, Object>();  
+        httpMap.put("jobUrl", sbConfigVo.getUrl());
+        HttpResponse response = SbPluginUtil.getHttpResponseForSb(httpMap, SB_PROJECT_REST);
         
-        // Install the all-trusting trust manager
-        SSLContext sslContext = SSLContext.getInstance("SSL");
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+        int respCode = response.getStatusLine().getStatusCode();        
+        System.out.println("statuscode : " + respCode);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        if (respCode / 100 != 2) {//200 번대가 아니면 오류
+        	rtnMap.put("result", "fail");        	
+        	rtnMap.put("message", "ResponseCode : " + respCode + " [" + responseBody + "]");
+        	return rtnMap;
+        }
 
-        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+        ObjectMapper objectMapper = new ObjectMapper();        
+        List<SbProjectVo> list = objectMapper.readValue(
+        		responseBody,
+                objectMapper.getTypeFactory().constructCollectionType(
+                        List.class, SbProjectVo.class));
         
-        
-        
-        //getHttpResponseForSb(Map<String, Object> sbMap,  //jobUrl
-    	
-    	List<Map<String, Object>> projectList = new ArrayList<Map<String, Object>> ();
-    	Map<String, Object> projectMap = new HashMap<String, Object>();
-    	projectMap.put("id", "project01");
-    	projectMap.put("text", "project01");    	
-    	projectList.add(projectMap);
-    	
-    	
-    	projectMap = new HashMap<String, Object>();
-    	projectMap.put("id", "project02");
-    	projectMap.put("text", "project02");    	
-    	projectList.add(projectMap);
-    	
-    	
-    	projectMap = new HashMap<String, Object>();
-    	projectMap.put("id", "aaproject03");
-    	projectMap.put("text", "aaproject0355");    	
-    	projectList.add(projectMap);
-    	logger.debug("###[END] get SmartBuilder ProjectList ###");
+        rtnMap.put("sbList", list);
+    	return rtnMap;
 		
-		return projectList;
 	}
 }

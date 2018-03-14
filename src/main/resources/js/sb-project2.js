@@ -31,7 +31,7 @@
 				
 				if (chkValue ==1) { //EDIT
 					//issueId : 이슈 아이디
-					SB_INCLUDER.sb_project("issue", issueId, $(document) );
+					SB_INCLUDER.sb_project(2, issueId, $(document) ); //1:projectName, 2:issueId
 				}				
 			}
 		});	

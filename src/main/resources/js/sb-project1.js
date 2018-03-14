@@ -5,7 +5,7 @@
 		if (form.length) {
         	 console.log("Create issue from Administrator");        	 
         	 //alert ("issue-create-project-name : " + $("#issue-create-project-name").text()); //프로젝트 이름으로...
-        	 SB_INCLUDER.sb_project("project", $("#issue-create-project-name").text(), $(document) );
+        	 SB_INCLUDER.sb_project(1, $("#issue-create-project-name").text(), $(document) ); //1:projectName, 2:issueId
         	 
         	 return;
 		}        

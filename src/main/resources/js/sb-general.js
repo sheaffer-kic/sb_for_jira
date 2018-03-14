@@ -6,25 +6,33 @@ var SB_INCLUDER = {
 		SB_INCLUDER.$contextObject = $contextObject;
 		console.log("flag : " + flag + ", value : " + value);  //flag 와  value 를 가지고 projectType 판별 후  cf(customfield_10007) 를 가지고 온다
 		
-		var contextPath =$("meta[name='ajs-context-path']").attr('content');
 		var url = contextPath + "/rest/sb/1.0/project/list";
+		var obj = new Object();
+		obj.flag = flag;
+		obj.value = value;
+		
+		console.log("dd : " + JSON.stringify(obj));
 		$.ajax({
-			type: 'get',
+			type: 'POST',
 			url: url ,
+			data: JSON.stringify(obj),
 			async: false,
+    		contentType: 'application/json',
+            dataType: 'json',
 			success: function(data, textStatus, response) {
-				var cf = "customfield_10007";
-				$("#" + cf).auiSelect2({
-					placeholder: "Select Project2",
-					 allowClear: true,
-					//data : [{id: 0, text: 'story2'},{id: 1, text: 'bug2'},{id: 2, text: 'task2'}]
-					data: data
-				
-				});				
-				//$("#" + cf).select2('open'); //데이터영역이 열려짐)
+				if (data.result == "ok") {
+					var cf = data.cfId;					
+					$("#" + cf).auiSelect2({
+						placeholder: "Select Build Project",
+						 allowClear: true,
+						data: data.sbList					
+					});		
+				} else if (data.result == "fail") {
+					alert (data.message);
+				}
 			},
 			error :function(response, textStatus, errorThrown) {
-				alert("code :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+				alert("code22 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
 			}		
 		});			
 	},
@@ -37,8 +45,8 @@ var SB_INCLUDER = {
             //issueId를 가지고  actionId(action_id_41) 를 가져올지 결정한다. (rest 에서 결정, 세팅할 필요없으면 cacheBuild[issueId]이  X 값 세팅 )
             //action_id_41 :: rest 에서 가져온값.            
             //var actionId = "action_id_41";            
-            var contextPath =$("meta[name='ajs-context-path']").attr('content');
-    		var url = contextPath + "/rest/sb/1.0/project/list";
+            //var contextPath =$("meta[name='ajs-context-path']").attr('content');
+/*    		var url = contextPath + "/rest/sb/1.0/project/list";
     		var actionId = "action_id_41";
     		$.ajax({
     			type: 'get',
@@ -50,9 +58,9 @@ var SB_INCLUDER = {
     	            
     			},
     			error :function(response, textStatus, errorThrown) {
-    				alert("code :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+    				alert("code33 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
     			}		
-    		});    		
+    		});  */  		
 		}
 		
 		SB_INCLUDER.sb_build_execute("action_id_41", $contextObject );
@@ -74,13 +82,15 @@ var SB_INCLUDER = {
 
 (function ($) {
     AJS.toInit(function () {
+    	var contextPath =$("meta[name='ajs-context-path']").attr('content');
     	
 		JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, $context, reason) {
 			//Dashboard, Board 에서
 			if (reason == JIRA.CONTENT_ADDED_REASON.dialogReady) { 
 				if ($context.parent('#create-issue-dialog').length ||  $context.parent('#create-subtask-dialog').length || $context.parent('#prefillable-create-issue-dialog').length) {
-					//alert ("projectfield : " + $("#project-field").val());  SW-SCRUM01 (SWSCRUM01)  => SW-SCRUM01 이 프로젝트이름임..					
-					SB_INCLUDER.sb_project("project", $("#project-field").val(), $(document) );
+					//alert ("projectfield : " + $("#project-field").val());  SW-SCRUM01 (SWSCRUM01)  => SW-SCRUM01 이 프로젝트이름임..
+					var project = $("#project-field").val()
+					SB_INCLUDER.sb_project(1, project.substring(0, project.indexOf("(")), $(document) );  //1:projectName, 2:issueId
 					return;
 				}                     
 

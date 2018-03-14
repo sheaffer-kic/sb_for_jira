@@ -51,7 +51,7 @@ public class SbPluginUtil {
 		return jb.toString();
 	}
 	
-	public static HttpResponse getHttpResponseForSb(Map<String, Object> sbMap, String restPath) throws Exception  {		
+	public static HttpResponse getHttpResponseForSb(Map<String, Object> httpMap, String restPath) throws Exception  {		
 	     // Create a trust manager that does not validate certificate chains
         TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
                 public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -78,7 +78,7 @@ public class SbPluginUtil {
 
         SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
 
-		URI uri = URI.create((String)sbMap.get("jobUrl") + restPath); //https://kmd.kicco.com/sb.view  + "/rest/project/list/for/external"
+		URI uri = URI.create((String)httpMap.get("jobUrl") + restPath); //https://kmd.kicco.com/sb.view  + "/rest/project/list/for/external"
 		HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
 			
 		CloseableHttpClient httpClient = HttpClients.custom()
@@ -96,31 +96,49 @@ public class SbPluginUtil {
 	}
 	
 	
-	private static SSLConnectionSocketFactory getSSLConnection () throws Exception {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-        };
+	
+	public static HttpResponse postHttpResponseForSb(Map<String, Object> httpMap, String restPath) throws Exception  {		
+	     // Create a trust manager that does not validate certificate chains
+       TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
+               public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                   return null;
+               }
+               public void checkClientTrusted(X509Certificate[] certs, String authType) {
+               }
+               public void checkServerTrusted(X509Certificate[] certs, String authType) {
+               }
+           }
+       };
 
-        HostnameVerifier hostnameVerifier = new HostnameVerifier(){
+       HostnameVerifier hostnameVerifier = new HostnameVerifier(){
 			@Override
 			public boolean verify(String hostname, SSLSession session) {
 				// TODO Auto-generated method stub
 				return true;
 			}
-        };
-        
-        // Install the all-trusting trust manager
-        SSLContext sslContext = SSLContext.getInstance("SSL");
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+       };
+       
+       // Install the all-trusting trust manager
+       SSLContext sslContext = SSLContext.getInstance("SSL");
+       sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
 
-        return new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
-	}
+       SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+
+		URI uri = URI.create((String)httpMap.get("jobUrl") + restPath); //https://kmd.kicco.com/sb.view  + "/rest/project/list/for/external"
+		HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
+			
+		CloseableHttpClient httpClient = HttpClients.custom()
+	            .setSSLSocketFactory(sslsf)
+	            //.setDefaultCredentialsProvider(credsProvider)
+	            .build();
+	        
+			
+		HttpClientContext localContext = HttpClientContext.create();		
+		HttpPost postMethod = new HttpPost(uri);
+	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));	
+	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
+			
+		return response;
+	}	
+	
 }

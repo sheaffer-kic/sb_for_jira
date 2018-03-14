@@ -134,6 +134,13 @@
             <version>${jira.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.2-atlassian-1</version>
+		</dependency>        
          
 
         <!-- WIRED TEST RUNNER DEPENDENCIES -->
@@ -149,11 +156,7 @@
             <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.2.2-atlassian-1</version>
-        </dependency>
+
 		<dependency>
 			<groupId>com.google.collections</groupId>
 			<artifactId>google-collections</artifactId>
