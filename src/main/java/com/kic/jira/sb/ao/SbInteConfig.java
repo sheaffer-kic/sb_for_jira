@@ -48,7 +48,7 @@ public interface SbInteConfig extends Entity {
 
 	//빌드성공시 수행할 트랜지션 이름
 	String getBuildSuccessName();
-	void setBuildSuccessName(int buildSuccessName );
+	void setBuildSuccessName(String buildSuccessName );
 	
 
 	//빌드실패시 수행할 트랜지션 id
