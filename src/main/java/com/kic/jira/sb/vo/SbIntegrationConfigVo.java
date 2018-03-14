@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class SbIntegerationConfigVo implements Serializable {
+public class SbIntegrationConfigVo implements Serializable {
 	private static final long serialVersionUID = -7830516092464822807L;
 
 	@XmlElement(name = "projectKey")
