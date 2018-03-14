@@ -33,8 +33,8 @@ public interface SbInteConfig extends Entity {
 	int getBuildProgressId();
 	void setBuildProgressId(int deployProgressId);
 	
-	String getDeployProgressName();
-	void setDeployProgressName(String deployProgressName);
+	String getBuildProgressName();
+	void setBuildProgressName(String deployProgressName);
 	
 	//이 액션(트랜지션)을 수행하면 buildProgressId 상태가 됨.
 	int getBuildProgressAction();
