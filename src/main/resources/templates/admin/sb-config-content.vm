@@ -7,24 +7,21 @@
 		<input type="hidden" name="id" id="id" value="$sbConfigContent.ID">
 		<div class="field-group">
 	        <label for="sbId">ID<span class="aui-icon icon-required">required</span></label>
-	        <input id="sbId" name="sbId" class="text" type="text" value="$sbConfigContent.sbId" data-aui-validation-field required="required" >
+	        <input id="sbId" name="sbId" class="text" type="text" value="$sbConfigContent.sbId" data-aui-validation-field required="required"/ >
 		</div>		
 		<div class="field-group">
 	        <label for="PassWord">PassWord<span class="aui-icon icon-required">required</span></label>
-	        <input type="password" class="password" id="sbPassword" name="sbPassword" value="$sbConfigContent.sbPassword" data-aui-validation-field required="required" >
+	        <input type="password" class="password" id="sbPassword" name="sbPassword" value="$sbConfigContent.sbPassword" data-aui-validation-field required="required" />
 		</div>
 		<div class="field-group">
 	        <label for="URL">URL<span class="aui-icon icon-required">required</span></label>
-	        <input class="text long-field" type="text" id="url" name="url" value="$sbConfigContent.url" data-aui-validation-field required="required" >
+	        <input class="text long-field" type="text" id="url" name="url" value="$sbConfigContent.url" data-aui-validation-field required="required" />
 	        <div  id="error_msg" class="error"></div>
 		</div>	
 		<div class="field-group">
-	        <label for="cfId">aCustomFiled For SmartBuilder Project<span class="aui-icon icon-required">required</span></label>
-
-        
-	        <select class="select" id="cfId" name="cfId">
-			</select>
-
+	        <label for="cfId">CustomFiled For Build Project<span class="aui-icon icon-required">required</span></label>
+        	<input id="cfName" name="cfName" class="text" type="text" value= "" data-aui-validation-field required="required" />
+			<input id="cfId" name="cfId" type="hidden" value="$sbConfigContent.sbCfId" />
 		</div>
 				
 	    <div class="buttons-container">
@@ -36,6 +33,9 @@
 				#end        
 		    </div>
 	    </div>
-
 	</form>
 </section>
+
+<script>
+	SB_CONFIG.sb_project('$sbConfigContent.sbCfName');
+</script>

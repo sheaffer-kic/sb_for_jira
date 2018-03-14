@@ -1,5 +1,6 @@
 package com.kic.jira.sb.util;
 
+import java.io.BufferedReader;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Map;
@@ -31,9 +32,24 @@ import com.atlassian.jira.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class SbPluginUtil {
 	private static final Logger logger = LoggerFactory.getLogger(SbPluginUtil.class);
 
+	public static String getRequestJsonData(HttpServletRequest request)  {
+		
+		StringBuffer jb = new StringBuffer();
+		String line = null;
+		try {
+			BufferedReader reader = request.getReader();
+			while ((line = reader.readLine()) != null) jb.append(line);
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
+		 
+		return jb.toString();
+	}
 	
 	public static HttpResponse getHttpResponseForSb(Map<String, Object> sbMap, String restPath) throws Exception  {		
 	     // Create a trust manager that does not validate certificate chains

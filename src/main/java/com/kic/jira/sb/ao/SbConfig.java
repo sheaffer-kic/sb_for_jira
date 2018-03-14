@@ -24,7 +24,13 @@ public interface SbConfig extends Entity {
 	String getUrl();
 	void setUrl(String url);
 	
+	//sbCfId (customfield for smartbuilder project)
+	String getSbCfId();
+	void setSbCfId(String sbCfId);
 	
+	
+	String getSbCfName();
+	void setSbCfName(String sbCfName);
 	
 	Date getRegDate();
 	void setRegDate(Date regDate);

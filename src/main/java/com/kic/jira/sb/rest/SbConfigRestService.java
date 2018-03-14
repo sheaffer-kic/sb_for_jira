@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
@@ -23,7 +25,6 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import com.kic.jira.sb.vo.IssueTypeVo;
 
 @Scanned 
 @Path("config")
@@ -43,13 +44,18 @@ public class SbConfigRestService {
 	@GET
     @Path("/sw/project/cf/list")
 	@Produces({MediaType.APPLICATION_JSON})	
-	public List<Map<String, String>> getCfListOfSwProject() throws Exception {
-		List<Map<String, String>> rtnList = new ArrayList<Map<String, String>>();
-
-		List<Project> projectList = projectManager.getProjects();
-		List<String> projIssueTypeList = new ArrayList<String> ();
-		CustomFieldManager cfm = ComponentAccessor.getCustomFieldManager(); 
+	public Map<String, Object> getCfListOfSwProject(@Context HttpServletRequest req) throws Exception { 		
+		String searchValue = req.getParameter("searchValue");
+		int page = Integer.parseInt(req.getParameter("page"))-1;
+		int pageLimit = Integer.parseInt(req.getParameter("pageLimit"));
+		int startIdx = page * pageLimit;
 		
+		CustomFieldManager cfm = ComponentAccessor.getCustomFieldManager();
+		
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		List<Project> projectList = projectManager.getProjects();
+		List<String> projIssueTypeList = new ArrayList<String> ();		
+		List<Map<String, String>> cfList = new ArrayList<Map<String, String>>();
 		
 		for (Project project : projectList) {
 			Collection<IssueType> issueTypes = project.getIssueTypes();
@@ -57,23 +63,31 @@ public class SbConfigRestService {
 	        	projIssueTypeList.add(it.getId());
 	        }
 			
-			
 			List<CustomField> projectFields = cfm.getCustomFieldObjects(project.getId(), projIssueTypeList);			
 			for (CustomField cf : projectFields) {
+				logger.debug("cfName : " + cf.getName());
 				System.out.println("cf ::: " + cf.getName() + ", id : " + cf.getId() + ", getNameKey : " + cf.getNameKey());
 				Map<String, String> cfMap = new HashMap<String, String>();
-				
-				cfMap.put("id", cf.getId());
-				cfMap.put("key", cf.getName());
-				rtnList.add(cfMap);
-			}
-			
-		}
-		
-		//중복제거.. (java8 의 Lambada)
-		rtnList = rtnList.parallelStream().distinct().collect(Collectors.toList());
 
-		return rtnList;
+				if (cf.getName().contains(searchValue)) {
+					cfMap.put("id", cf.getId() + "|" + cf.getName());
+					//cfMap.put("id", cf.getName());
+					cfMap.put("cf_name", cf.getName());
+					cfList.add(cfMap);
+				}
+			}			
+		}
+
+		//중복제거.. (java8 의 Lambada)
+		cfList = cfList.parallelStream().distinct().collect(Collectors.toList());
+		int totCount = cfList.size();
+		rtnMap.put("totCount", totCount);
+		
+		int lastIdx = startIdx + pageLimit;
+		if (totCount <= lastIdx) lastIdx = totCount;
+		cfList = cfList.subList(startIdx, lastIdx);
+		rtnMap.put("cfList", cfList);
+		return rtnMap;
 	}
 	
 	

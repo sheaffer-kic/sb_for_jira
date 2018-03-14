@@ -27,6 +27,12 @@ public class SbConfigVo implements Serializable {
 	@XmlElement(name = "url")
 	private String url;
 	
+	@XmlElement(name = "sbCfId")
+	private String sbCfId; //SmartBuildr의 customfield Id
+	
+	@XmlElement(name = "sbCfName")
+	private String sbCfName; //SmartBuildr의 customfield Id
+	
 	@XmlElement(name = "regDate")
 	private String regDate;
 	
@@ -60,7 +66,20 @@ public class SbConfigVo implements Serializable {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
+	
+	public String getSbCfName() {
+		return sbCfName;
+	}
+	public void setSbCfName(String sbCfName) {
+		this.sbCfName = sbCfName;
+	}	
+	
+	public String getSbCfId() {
+		return sbCfId;
+	}
+	public void setSbCfId(String sbCfId) {
+		this.sbCfId = sbCfId;
+	}	
 
 	public String getRegDate(){
 		return regDate;
