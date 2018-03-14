@@ -10,16 +10,14 @@ import webwork.action.ServletActionContext;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.message.I18nResolver;
-import com.kic.jira.sb.service.SbConfigService;
 import com.kic.jira.sb.service.SbIntegrationConfigService;
-import com.kic.jira.sb.vo.SbConfigVo;
-import com.kic.jira.sb.vo.SbProjectConfigVo;
+import com.kic.jira.sb.vo.SbIntegerationConfigVo;
 
 public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 	private static final long serialVersionUID = -4417299931960575349L;
 	private static final Logger logger = LoggerFactory.getLogger(SbIntegrationConifgWebWork.class);
 	
-	private SbProjectConfigVo sbProject;
+	private SbIntegerationConfigVo sbInteConfigVo;
 	
 	private String projectKey;
 	
@@ -56,8 +54,8 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 	}
 
 
-	public SbProjectConfigVo getSbProject() {
-		return sbProject;
+	public SbIntegerationConfigVo getSbInteConfigVo() {
+		return sbInteConfigVo;
 	}
 
 
