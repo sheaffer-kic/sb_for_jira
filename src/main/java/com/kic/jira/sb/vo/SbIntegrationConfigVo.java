@@ -25,7 +25,7 @@ public class SbIntegrationConfigVo implements Serializable {
 	
 	
 	@XmlElement(name = "buildProgressId")
-	private String buildProgressId; //빌드중 이슈 상태
+	private int buildProgressId; //빌드중 이슈 상태
 	
 	@XmlElement(name = "buildProgressName")
 	private String buildProgressName; //빌드중 이슈 상태 이름
@@ -79,10 +79,10 @@ public class SbIntegrationConfigVo implements Serializable {
 	public void setBuildStepId(int buildStepId) {
 		this.buildStepId = buildStepId;
 	}
-	public String getBuildProgressId() {
+	public int getBuildProgressId() {
 		return buildProgressId;
 	}
-	public void setBuildProgressId(String buildProgressId) {
+	public void setBuildProgressId(int buildProgressId) {
 		this.buildProgressId = buildProgressId;
 	}
 	public String getBuildProgressName() {
