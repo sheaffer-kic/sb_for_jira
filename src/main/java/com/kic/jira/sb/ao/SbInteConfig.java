@@ -26,19 +26,19 @@ public interface SbInteConfig extends Entity {
 	
 	//buildTargetId 상태에 해당하는 stepId
 	int getBuildStepId();
-	void setBuildStepId(int deployStepId);
+	void setBuildStepId(int buildStepId);
 	
 	
 	//빌드중 이슈 상태
 	int getBuildProgressId();
-	void setBuildProgressId(int deployProgressId);
+	void setBuildProgressId(int buildProgressId);
 	
 	String getBuildProgressName();
-	void setBuildProgressName(String deployProgressName);
+	void setBuildProgressName(String buildProgressName);
 	
 	//이 액션(트랜지션)을 수행하면 buildProgressId 상태가 됨.
 	int getBuildProgressAction();
-	void setBuildProgressAction(int getDeployProgressAction);
+	void setBuildProgressAction(int buildProgressAction);
 	
 	
 	
