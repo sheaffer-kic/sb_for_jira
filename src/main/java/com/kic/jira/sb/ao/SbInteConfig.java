@@ -57,5 +57,5 @@ public interface SbInteConfig extends Entity {
 
 	//빌드실패시 수행할 트랜지션 이름
 	String getBuildFailName();
-	void setBuildFailId(String buildFailName);
+	void setBuildFailName(String buildFailName);
 }
