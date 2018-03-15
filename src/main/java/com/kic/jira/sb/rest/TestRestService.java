@@ -35,18 +35,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.atlassian.jira.component.ComponentAccessor;
-import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.issue.status.Status;
 import com.atlassian.jira.project.Project;
-import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import com.kic.jira.sb.service.SbConfigService;
+import com.kic.jira.sb.service.SbIntegrationConfigService;
 import com.kic.jira.sb.vo.ActionVo;
 import com.kic.jira.sb.vo.IssueStatusVo;
 import com.kic.jira.sb.vo.IssueTypeVo;
@@ -60,10 +57,10 @@ import com.opensymphony.workflow.loader.StepDescriptor;
 @Path("test")
 public class TestRestService {
 	
-	private final TestDAO testDAO;
+	private final SbIntegrationConfigService sbInteConfigService;
 	
-	public TestRestService(TestDAO testDAO) {
-		this.testDAO = testDAO;
+	public TestRestService(SbIntegrationConfigService sbInteConfigService) {
+		this.sbInteConfigService = sbInteConfigService;
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(TestRestService.class);
@@ -107,7 +104,7 @@ public class TestRestService {
 	@Produces({MediaType.APPLICATION_JSON})
 	public SbIntegrationConfigVo getSbInteConfg(@PathParam("projectKey") String projectKey, 
 												@PathParam("issueType") String issueType) throws Exception {
-		return testDAO.selectSbInteConfig(projectKey, issueType);
+		return sbInteConfigService.getSelectSbIntegrationConfig(projectKey, issueType);
 	}	
 	
 	//localhost:2990/context/rest/sb/1.0/test/list/

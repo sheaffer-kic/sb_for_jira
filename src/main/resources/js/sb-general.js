@@ -99,9 +99,9 @@ var SB_INCLUDER = {
     		    			data: JSON.stringify(obj),		
     		    		    dataType: "json",     
     		    		    contentType: "application/json; charset=utf-8", 
-    		    		    success:function (data, textStatus, response) {  
-    		    		    	alert ("build result set : " + JSON.stringify(data));
+    		    		    success:function (data, textStatus, response) {      		    		    	
     		    		    	if (data.result == "ok") {
+    		    		    		alert("Build Request Success !!!!");
     		    		    		reload = true;	
     		    		    	} else {
     		    		    		alert ("error : " + data.message);

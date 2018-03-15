@@ -39,6 +39,7 @@ import com.atlassian.sal.api.ApplicationProperties;
 import com.atlassian.sal.api.UrlMode;
 import com.atlassian.sal.api.user.UserManager;
 import com.kic.jira.sb.service.SbConfigService;
+import com.kic.jira.sb.service.SbIntegrationConfigService;
 import com.kic.jira.sb.util.SbPluginUtil;
 import com.kic.jira.sb.vo.SbConfigVo;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
@@ -50,8 +51,8 @@ import com.kic.jira.sb.vo.SbProjectVo;
 public class BuildRestService {
 	private static final Logger logger = LoggerFactory.getLogger(BuildRestService.class);
 	
-	private static final String SB_PROJECT_URL = "/rest/project/list/for/external";
-	private static final String SB_BUILD_URL = "/rest/project/external/build";
+	private static final String SB_PROJECT_REST = "/rest/project/list/for/external";
+	private static final String SB_BUILD_REST = "/rest/project/external/build";
 	
 	private static final String PROJECT_TYPE_SW = "software";
 	
@@ -68,8 +69,9 @@ public class BuildRestService {
 	private final ApplicationProperties applicationProperties;
 	
 	private final SbConfigService sbConfigService;
+	private final SbIntegrationConfigService sbInteConfigService;
 	
-	private final TestDAO testDAO;
+	//private final TestDAO testDAO;
 	
 	public BuildRestService(@ComponentImport ProjectManager projectManager,
 								@ComponentImport IssueManager issueManager,
@@ -79,7 +81,7 @@ public class BuildRestService {
 								@ComponentImport UserManager userManager,
 								@ComponentImport ApplicationProperties applicationProperties,
 								SbConfigService sbConfigService,
-								TestDAO testDAO) {
+								SbIntegrationConfigService sbInteConfigService) {
 		this.projectManager = projectManager;
 		this.issueManager = issueManager;
 		this.issueService = issueService;
@@ -88,7 +90,7 @@ public class BuildRestService {
 		this.userManager = userManager;
 		this.applicationProperties = applicationProperties;
 		this.sbConfigService = sbConfigService;
-		this.testDAO = testDAO;
+		this.sbInteConfigService = sbInteConfigService;
 	}
 	
 	
@@ -122,7 +124,7 @@ public class BuildRestService {
     	
         Map<String, Object> httpMap = new HashMap<String, Object>();  
         httpMap.put("jobUrl", sbConfigVo.getUrl());
-        HttpResponse response = SbPluginUtil.getHttpResponseForSb(httpMap, SB_PROJECT_URL);
+        HttpResponse response = SbPluginUtil.getHttpResponseForSb(httpMap, SB_PROJECT_REST);
         
         int respCode = response.getStatusLine().getStatusCode();        
         System.out.println("statuscode : " + respCode);
@@ -165,7 +167,7 @@ public class BuildRestService {
     		return rtnMap;
     	}
 		
-		SbIntegrationConfigVo sbVo = testDAO.selectSbInteConfig(project.getKey(), issue.getIssueTypeId());
+		SbIntegrationConfigVo sbVo = sbInteConfigService.getSelectSbIntegrationConfig(project.getKey(), issue.getIssueTypeId());
 		if (sbVo.getBuildProgressAction() == 0) {
 	   		rtnMap.put("result", "warn");
     		rtnMap.put("message", "This Issue doesn't do build job !!!");
@@ -190,7 +192,8 @@ public class BuildRestService {
 		//Project project = issue.getProjectObject();
 		
 		SbConfigVo sbConfigVo = sbConfigService.getSelectSbConfig();		
-		String sbProjectName = customFieldManager.getCustomFieldObject(sbConfigVo.getSbCfId()).getValue(issue).toString();
+		//String sbProjectName = customFieldManager.getCustomFieldObject(sbConfigVo.getSbCfId()).getValue(issue).toString();
+		String sbProjectName = customFieldManager.getCustomFieldObject(sbConfigVo.getSbCfId()).getValueFromIssue(issue);
 
 		JSONObject jsonSend = new JSONObject();		
 		jsonSend.put("projectName", sbProjectName);
@@ -208,7 +211,7 @@ public class BuildRestService {
 		httpMap.put("sendData", jsonSend);
 		
 		//빌드요청 호출
-		HttpResponse response = SbPluginUtil.postHttpResponseForSb(httpMap, SB_BUILD_URL);
+		HttpResponse response = SbPluginUtil.postHttpResponseForSb(httpMap, SB_BUILD_REST);
 		
         int respCode = response.getStatusLine().getStatusCode();        
         logger.debug("Build Result statuscode : " + respCode);
@@ -247,7 +250,7 @@ public class BuildRestService {
 		Project project = issue.getProjectObject();		
 		//System.out.println("issue : " + issue.getSummary() + ", issueType : " + issue.getIssueTypeId());
 		
-		SbIntegrationConfigVo sbVo = testDAO.selectSbInteConfig(project.getKey(), issue.getIssueTypeId());
+		SbIntegrationConfigVo sbVo = sbInteConfigService.getSelectSbIntegrationConfig(project.getKey(), issue.getIssueTypeId());
 		System.out.println("#### update result : " + sbVo.toString());
 		System.out.println("build ING action : " + sbVo.getBuildProgressAction());
 		System.out.println("build Success action : " + sbVo.getBuildSuccessId());
