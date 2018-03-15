@@ -2,12 +2,10 @@
 #foreach($list in $sbList)
 	#foreach($log in $list)
 		#if($log.projResult.indexOf("2") > 0)
-			#set ($href = "#")
+			<a target="_blank" href="#">
 		#else
-			#set ($href = "$sbConfig.url?tagName=$tagName&projectId=$projectId")			
-		#end
-		
-		<a target="_blank" href="$href">
+			<a target="_blank" href="$url?resultId=$log.projResultId">			
+		#end		
 			<span class='square-box-$log.projResult'/>
 			<span class="tooltiptext">
 				&nbsp;&nbsp;#$log.projResultId <br/> 

@@ -12,11 +12,11 @@ public interface SbConfig extends Entity {
 
 	//smart builder info
 	
-	//id
+	//SmartBuilder id
 	String getSbId();
 	void setSbId(String sbId);
 	
-	//pw
+	//SmartBuilder pw
 	String getSbPassword();
 	void setSbPassword(String sbPassword);
 	
@@ -31,6 +31,14 @@ public interface SbConfig extends Entity {
 	
 	String getSbCfName();
 	void setSbCfName(String sbCfName);
+	
+	//Jira id
+	String getJiraId();
+	void setJiraId(String jiraId);
+	
+	//Jira pw
+	String getJiraPassword();
+	void setJiraPassword(String jiraPassword);
 	
 	Date getRegDate();
 	void setRegDate(Date regDate);

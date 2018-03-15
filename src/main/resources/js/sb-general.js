@@ -6,7 +6,7 @@ var SB_INCLUDER = {
 		SB_INCLUDER.$contextObject = $contextObject;
 		console.log("flag : " + flag + ", value : " + value);  //flag 와  value 를 가지고 projectType 판별 후  cf(customfield_10007) 를 가지고 온다
 		
-		var url = contextPath + "/rest/sb/1.0/project/list";
+		var url = contextPath + "/rest/sb/1.0/build/project/list";
 		var obj = new Object();
 		obj.flag = flag;
 		obj.value = value;
@@ -43,7 +43,7 @@ var SB_INCLUDER = {
 		if (SB_INCLUDER._cacheBuild[issueId] == null) {
             SB_INCLUDER._cacheBuild[issueId] = {};
             
-    		var url = contextPath + "/rest/sb/1.0/project/build/action/id/" + issueId;
+    		var url = contextPath + "/rest/sb/1.0/build/action/id/" + issueId;
     		//var actionId = "action_id_41";
     		$.ajax({
     			type: 'get',
@@ -72,7 +72,7 @@ var SB_INCLUDER = {
 		SB_INCLUDER.$contextObject = $contextObject;
 		
 		$("#" + actionId).click(function () {
-    		var url = contextPath + "/rest/sb/1.0/project/execute/build";
+    		var url = contextPath + "/rest/sb/1.0/build/execute";
     		var obj = new Object();
     		obj.issueId = issueId;
 
@@ -84,13 +84,42 @@ var SB_INCLUDER = {
     			data: JSON.stringify(obj),		
     		    dataType: "json",     
     		    contentType: "application/json; charset=utf-8",     			
-    			success: function(data, textStatus, response) {    				
-    				alert (JSON.stringify(data));
-    				//location.reload();
-    				reload = true;
+    		    //contentType: "application/json",
+    			success: function(data, textStatus, response) {  
+    				if (data.result == "ok") {
+    					obj = new Object();
+    					obj.issueKey = data.issueKey;
+    					obj.flag = "I"; //빌드중 (ㅑ), 빌드성공(ㅖ), 빌드실패(F) 3가지가 있으면, 여기서는 빌드중
+    					url = contextPath + "/rest/sb/1.0/build/update/result";
+
+    					$.ajax({
+    		    			type: 'POST',
+    		    			url: url ,
+    		    			async: false,
+    		    			data: JSON.stringify(obj),		
+    		    		    dataType: "json",     
+    		    		    contentType: "application/json; charset=utf-8", 
+    		    		    success:function (data, textStatus, response) {      		    		    	
+    		    		    	if (data.result == "ok") {
+    		    		    		alert("Build Request Success !!!!");
+    		    		    		reload = true;	
+    		    		    	} else {
+    		    		    		alert ("error : " + data.message);
+    		    		    	}
+    		    		    	
+    		    		    }, 
+    		    			error :function(response, textStatus, errorThrown) {
+    		    				alert("code :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+    		    			}    		    		    
+    		    		    
+    					});
+    					//reload = true;
+    				} else {
+    					alert ("error :" + data.message);
+    				}
     			},
     			error :function(response, textStatus, errorThrown) {
-    				alert("code33 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+    				alert("code :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
     			}		
     		});  
 	

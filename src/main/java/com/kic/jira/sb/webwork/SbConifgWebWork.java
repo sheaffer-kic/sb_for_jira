@@ -81,7 +81,9 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 			sbConfigContent.setSbPassword("");
 			sbConfigContent.setUrl("");
 			sbConfigContent.setSbCfId("");	
-			sbConfigContent.setSbCfName("");	
+			sbConfigContent.setSbCfName("");
+			sbConfigContent.setJiraId("");
+			sbConfigContent.setJiraPassword("");			
 		}
 		
 		return this.sbConfigContent;
@@ -112,6 +114,8 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 			sbConfigVo.setUrl(url);			
 			sbConfigVo.setSbCfName(cfName);
 			sbConfigVo.setSbCfId(cfId);
+			sbConfigVo.setJiraId(jsonObj.getString("jiraId"));
+			sbConfigVo.setJiraPassword(jsonObj.getString("jiraPassword"));		
 			
 			sbConfigService.setInsertSbConfig(sbConfigVo);	
 			
@@ -132,6 +136,8 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 			String receiveData = SbPluginUtil.getRequestJsonData(request);
 			JSONObject jsonObj = new JSONObject(receiveData.trim());
 			
+			System.out.println("jsoObje : " + jsonObj.toString());
+			
 			String sbId = jsonObj.getString("sbId");
 			String sbPassword = jsonObj.getString("sbPassword");
 			String url = jsonObj.getString("url");
@@ -147,11 +153,14 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 			sbConfigVo.setUrl(url);	
 			sbConfigVo.setSbCfName(cfName);
 			sbConfigVo.setSbCfId(cfId);
+			sbConfigVo.setJiraId(jsonObj.getString("jiraId"));
+			sbConfigVo.setJiraPassword(jsonObj.getString("jiraPassword"));			
 			
 			System.out.println("doUpdate()=====>id: "+id);
 			System.out.println("doUpdate()=====>sbConfigVo.getSbId(): "+sbConfigVo.getSbId());
 			System.out.println("doUpdate()=====>sbConfigVo.getSbPassword(): "+sbConfigVo.getSbPassword());
 			System.out.println("doUpdate()=====>sbConfigVo.getUrl(): "+sbConfigVo.getUrl());					
+			System.out.println("doUpdate()=====>sbConfigVo.getJiraId(): "+sbConfigVo.getJiraId());
 			
 			sbConfigService.setUpdateSbConfig(sbConfigVo, id);
 			

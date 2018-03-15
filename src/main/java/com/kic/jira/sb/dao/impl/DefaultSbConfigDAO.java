@@ -33,7 +33,7 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 	public SbConfigVo selectSbConfig() throws Exception{
 		//System.out.println("DefaultSbConfigDAO : selectSbConfig()=====> 1");
 		
-		Query streamQ = Query.select("ID, SB_CF_ID, SB_CF_NAME, SB_ID, SB_PASSWORD, URL, REG_DATE, MODIFY_DATE");
+		Query streamQ = Query.select("ID, JIRA_ID, JIRA_PASSWORD, SB_CF_ID, SB_CF_NAME, SB_ID, SB_PASSWORD, URL, REG_DATE, MODIFY_DATE");
 		
 		//System.out.println("DefaultSbConfigDAO : selectSbConfig()=====> 22222");
 		
@@ -48,6 +48,8 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
         		sbConfigVo.setUrl(t.getUrl());
         		sbConfigVo.setSbCfId(t.getSbCfId());
         		sbConfigVo.setSbCfName(t.getSbCfName());
+        		sbConfigVo.setJiraId(t.getJiraId());
+        		sbConfigVo.setJiraPassword(t.getJiraPassword());        		
         		sbConfigVo.setRegDate(t.getRegDate());
         		//sbConfigVo.setModifyDate(t.getModifyDate());
             }
@@ -72,12 +74,14 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 		SbConfig sbConfigAo = ao.create(SbConfig.class);
 		
 		//System.out.println("DefaultSbConfigDAO : insertSbConfig()=====>sbConfigVo.getSbId(): "+sbConfigVo.getSbId());		
-		
+
 		sbConfigAo.setSbId(sbConfigVo.getSbId());
 		sbConfigAo.setSbPassword(sbConfigVo.getSbPassword());
 		sbConfigAo.setUrl(sbConfigVo.getUrl());		
 		sbConfigAo.setSbCfId(sbConfigVo.getSbCfId());
 		sbConfigAo.setSbCfName(sbConfigVo.getSbCfName());
+		sbConfigAo.setJiraId(sbConfigVo.getJiraId());
+		sbConfigAo.setJiraPassword(sbConfigVo.getJiraPassword());		
 		sbConfigAo.setRegDate(new Date());	
 		
 		sbConfigAo.save();
@@ -108,7 +112,9 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 		sbConfigAo.setSbPassword(sbConfigVo.getSbPassword());
 		sbConfigAo.setUrl(sbConfigVo.getUrl());
 		sbConfigAo.setSbCfId(sbConfigVo.getSbCfId());	
-		sbConfigAo.setSbCfName(sbConfigVo.getSbCfName());	
+		sbConfigAo.setSbCfName(sbConfigVo.getSbCfName());
+		sbConfigAo.setJiraId(sbConfigVo.getJiraId());
+		sbConfigAo.setJiraPassword(sbConfigVo.getJiraPassword());		
 		sbConfigAo.setModifyDate(new Date());
 		
 		sbConfigAo.save();		

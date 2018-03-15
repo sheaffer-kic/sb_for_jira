@@ -87,6 +87,8 @@ function fn_insert() {
 	obj.url = AJS.$('#url').val();
 	obj.cfId = AJS.$('#cfId').val();
 	obj.cfName = AJS.$('#cfName').val();
+	obj.jiraId = AJS.$('#jiraId').val();		
+	obj.jiraPassword = AJS.$('#jiraPassword').val();	
 	var url = contextPath + "/secure/admin/SbConfig!insert.jspa";
 	
 	console.log("obj :: " + JSON.stringify(obj));
@@ -123,6 +125,8 @@ function fn_update(id) {
 	obj.url = AJS.$('#url').val();
 	obj.cfId = AJS.$('#cfId').val();
 	obj.cfName = AJS.$('#cfName').val();
+	obj.jiraId = AJS.$('#jiraId').val();		
+	obj.jiraPassword = AJS.$('#jiraPassword').val();	
 	var url = contextPath + "/secure/admin/SbConfig!update.jspa";	
 	
 	$.ajax({
@@ -173,6 +177,10 @@ function fn_delete(id) {
 				});
 				
 				location.href= contextPath + "/secure/admin/SbConfig!default.jspa";
+
+
+				
+				
 			},
 			error :function(response, textStatus, errorThrown) {
 				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
