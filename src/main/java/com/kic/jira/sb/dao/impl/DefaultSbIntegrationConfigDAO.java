@@ -48,6 +48,40 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
 		return rtnList;
 	}
 	
+	//smart builder에서 호출하여사용함
+	@Override
+	public SbIntegrationConfigVo selectSbIntegrationConfig(String projectKey, String issueType) throws Exception{
+		Query streamQ = Query.select("ID, PROJECT_KEY, ISSUE_TYPE, ISSUE_TYPE_NAME, BUILD_TARGET_ID, BUILD_TARGET_NAME, "
+				+ "BUILD_STEP_ID, BUILD_PROGRESS_ID, BUILD_PROGRESS_NAME, BUILD_PROGRESS_ACTION, "
+				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME").where("PROJECT_KEY = ? AND ISSUE_TYPE = ?", projectKey, issueType);	
+		
+		final SbIntegrationConfigVo sbIntegrationConfigVo = new SbIntegrationConfigVo();
+		
+		ao.stream(SbInteConfig.class, streamQ, new EntityStreamCallback<SbInteConfig, Integer>() {		
+            @Override
+            public void onRowRead(SbInteConfig t) {
+            	sbIntegrationConfigVo.setID(t.getID());
+        		sbIntegrationConfigVo.setProjectKey(t.getProjectKey());
+        		sbIntegrationConfigVo.setIssueType(t.getIssueType());
+        		sbIntegrationConfigVo.setIssueType(t.getIssueTypeName());
+        		sbIntegrationConfigVo.setIssueTypeName(t.getIssueTypeName());
+        		sbIntegrationConfigVo.setBuildTargetId(t.getBuildTargetId());
+        		sbIntegrationConfigVo.setBuildTargetName(t.getBuildTargetName());
+        		sbIntegrationConfigVo.setBuildStepId(t.getBuildStepId());
+        		sbIntegrationConfigVo.setBuildProgressId(t.getBuildProgressId());
+        		sbIntegrationConfigVo.setBuildProgressName(t.getBuildProgressName());
+        		sbIntegrationConfigVo.setBuildProgressAction(t.getBuildProgressAction());
+        		sbIntegrationConfigVo.setBuildSuccessId(t.getBuildSuccessId());
+        		sbIntegrationConfigVo.setBuildSuccessName(t.getBuildSuccessName());
+        		sbIntegrationConfigVo.setBuildFailId(t.getBuildFailId());
+        		sbIntegrationConfigVo.setBuildFailName(t.getBuildFailName());           		
+	
+            }
+		});		
+		
+		return sbIntegrationConfigVo;
+	}
+	
 	@Override
 	public SbIntegrationConfigVo selectSbIntegrationConfig(int id) throws Exception{
 

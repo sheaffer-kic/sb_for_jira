@@ -36,12 +36,18 @@ public class SbIntegrationConfigServiceImpl implements SbIntegrationConfigServic
 	public List<SbInteConfig> getListSbIntegrationConfig() throws Exception{
 		return sbIntegrationConfigDAO.listSbIntegrationConfig();
 	}	
+
+	//smart builder에서 호출하여사용함
+	@Override
+	public SbIntegrationConfigVo getSelectSbIntegrationConfig(String projectKey, String issueType) throws Exception{
+		return sbIntegrationConfigDAO.selectSbIntegrationConfig(projectKey, issueType);
+	}
 	
 	@Override
 	public SbIntegrationConfigVo getSelectSbIntegrationConfig(int id) throws Exception{
 		return sbIntegrationConfigDAO.selectSbIntegrationConfig(id);
 	}
-	
+		
 	@Override
 	public SbInteConfig setInsertSbIntegrationConfig(SbIntegrationConfigVo sbIntegrationConfigVo) throws Exception{
 		return sbIntegrationConfigDAO.insertSbIntegrationConfig(sbIntegrationConfigVo);
