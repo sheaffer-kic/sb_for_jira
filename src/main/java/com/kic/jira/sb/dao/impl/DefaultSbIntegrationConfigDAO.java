@@ -49,11 +49,11 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
 	}
 	
 	@Override
-	public SbIntegrationConfigVo selectSbIntegrationConfig(String projectKey, String issueType) throws Exception{
+	public SbIntegrationConfigVo selectSbIntegrationConfig(int id) throws Exception{
 
 		Query streamQ = Query.select("ID, PROJECT_KEY, ISSUE_TYPE, ISSUE_TYPE_NAME, BUILD_TARGET_ID, BUILD_TARGET_NAME, "
 				+ "BUILD_STEP_ID, BUILD_PROGRESS_ID, BUILD_PROGRESS_NAME, BUILD_PROGRESS_ACTION, "
-				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME").where("PROJECT_KEY = ? AND ISSUE_TYPE = ?", projectKey, issueType);	
+				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME").where("ID = ? ", id);	
 		
 		final SbIntegrationConfigVo sbIntegrationConfigVo = new SbIntegrationConfigVo();
 		
@@ -63,7 +63,7 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
             	sbIntegrationConfigVo.setID(t.getID());
         		sbIntegrationConfigVo.setProjectKey(t.getProjectKey());
         		sbIntegrationConfigVo.setIssueType(t.getIssueType());
-        		sbIntegrationConfigVo.setIssueType(t.getIssueTypeName());
+        		sbIntegrationConfigVo.setIssueTypeName(t.getIssueTypeName());
         		sbIntegrationConfigVo.setBuildTargetId(t.getBuildTargetId());
         		sbIntegrationConfigVo.setBuildTargetName(t.getBuildTargetName());
         		sbIntegrationConfigVo.setBuildStepId(t.getBuildStepId());

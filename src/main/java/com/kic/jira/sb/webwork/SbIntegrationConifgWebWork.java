@@ -24,8 +24,6 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 	private static final long serialVersionUID = 8163482301218352570L;//-4417299931960575349L;
 	private static final Logger logger = LoggerFactory.getLogger(SbIntegrationConifgWebWork.class);
 	
-	private SbIntegrationConfigVo sbInteConfigVo;
-	
 	private List<SbInteConfig> sbInteConfigList;
 	
 	private String projectKey;
@@ -62,10 +60,6 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 
 	}
 
-
-	public SbIntegrationConfigVo getSbInteConfigVo() {
-		return sbInteConfigVo;
-	}
 	
 	public List<SbInteConfig> getSbInteConfigList() {
 		return this.sbInteConfigList;
@@ -84,6 +78,8 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
     public String getProjectKey() {
         return this.projectKey;
     }
+
+    
 
     
 	public void doInsert() {

@@ -38,8 +38,8 @@ public class SbIntegrationConfigServiceImpl implements SbIntegrationConfigServic
 	}	
 	
 	@Override
-	public SbIntegrationConfigVo getSelectSbIntegrationConfig(String projectKey, String issueType) throws Exception{
-		return sbIntegrationConfigDAO.selectSbIntegrationConfig(projectKey, issueType);
+	public SbIntegrationConfigVo getSelectSbIntegrationConfig(int id) throws Exception{
+		return sbIntegrationConfigDAO.selectSbIntegrationConfig(id);
 	}
 	
 	@Override

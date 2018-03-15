@@ -22,9 +22,13 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.atlassian.sal.api.message.I18nResolver;
+import com.kic.jira.sb.service.SbIntegrationConfigService;
 import com.kic.jira.sb.vo.ActionVo;
 import com.kic.jira.sb.vo.IssueStatusVo;
 import com.kic.jira.sb.vo.IssueTypeVo;
+import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.StepDescriptor;
 
@@ -36,6 +40,12 @@ import com.opensymphony.workflow.loader.StepDescriptor;
 public class SbIntegrationRestService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SbIntegrationRestService.class);
+	
+	private final SbIntegrationConfigService sbIntegrationConfigService;
+	
+	public SbIntegrationRestService(SbIntegrationConfigService sbIntegrationConfigService) {
+		this.sbIntegrationConfigService = sbIntegrationConfigService;
+	}	
 	
 	//http://xxx:prot/context/rest/sb/1.0/integration/test
 	@GET
@@ -177,6 +187,21 @@ public class SbIntegrationRestService {
 		
 		return actionList;
 	}	
-	
+
+	//http://localhost:2990/jira/rest/sb/1.0/integration/select/1
+	@GET
+    @Path("/select/{id}")
+	@Produces({MediaType.APPLICATION_JSON})			
+    public SbIntegrationConfigVo getSelectSbIntegrationConfig(@PathParam("id") int id){
+		SbIntegrationConfigVo sbIntegrationConfigVo = null;
+		try {
+			
+			sbIntegrationConfigVo = sbIntegrationConfigService.getSelectSbIntegrationConfig(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sbIntegrationConfigVo;	
+    }	
 
 }

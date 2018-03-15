@@ -44,7 +44,7 @@
 				<td>$list.buildSuccessName</td>	
 				<td>$list.buildFailName</td>
 				<td data-cell-type="operations">
-					<span class="aui-button aui-button-link show-details" id="edit$cnt" onclick="javascript:fn_edit('$list.ID')"><a href="#">Edit</a></span>
+					<span class="aui-button aui-button-link show-details" id="edit$cnt" onclick="javascript:fn_view('$list.ID')"><a href="#">Edit</a></span>
 					<span class="aui-button aui-button-link show-details" id="delete$cnt" onclick="javascript:fn_delete('$list.ID')"><a href="#">Delete</a></span>	
 				</td>
 			</tr>
@@ -70,7 +70,7 @@
     
     <div class="aui-dialog2-content">
 		<form id="valid-submit-form"  class="aui">
-			<input type="hidden" name="cfgId" id="cfgId"/>
+			<input type="hidden" name="id" id="id">
 		    <!-- issue type -->
    			<div class="field-group">    
     			<label for="url">Issue type<span class="aui-icon icon-required">required</span></label>

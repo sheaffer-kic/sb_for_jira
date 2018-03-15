@@ -8,45 +8,9 @@ AJS.toInit(function(){
 	console.log("contextPath=====>"+contextPath);
 	
 	//Add Configuration
-	AJS.$("#add-integration-button").click(function() {	
-		
-		AJS.dialog2("#add-dialog").show();
-		var url = contextPath + "/rest/sb/1.0/integration/issueType/"+projKey;
-
-		console.log("url=====>"+url);
-
-		AJS.$.ajax({
-			type: 'get',		
-			url: url, 
-			async: false, 
-			//data: sendData,
-			dataType: 'json',
-			success: function(data, textStatus, jqXHR) {
-				
-				setInitForm();
-				
-				//var issueType_list = data.projIssueTypeList;
-				
-				console.log("issueType_list data=====>"+JSON.stringify(data));
-				
-				AJS.$.each(data, function(key) {
-					var info = data[key];
-					AJS.$('#dply-issue-type').append(AJS.$('<option>', { 
-				        value: info.id,
-				        text : info.name
-				    }));
-				});
-
-				setDplyTrgtStatus(data[0].id);					
-
-			},
-			error :function(jqXHR, textStatus, errorThrown) {
-				alert('error: ' + textStatus);
-			}
-		});
-
-	});
-	
+	AJS.$("#add-integration-button").click(function() {			
+		setShowDialog();
+	});	
 	
 	// Hides the dialog (Add Configuration_)
 	AJS.$("#dialog-close-button").click(function(e) {
@@ -54,11 +18,11 @@ AJS.toInit(function(){
 	    AJS.dialog2("#add-dialog").hide();
 	});
 
-	// Ok 버튼(Add Configuration_)
+	// save 버튼(Add Configuration_)
 	AJS.$("#dialog-submit-button").click(function(e) {
 		e.preventDefault();
 		
-		var id =  AJS.$('#cfgId').val() ;
+		var id =  AJS.$('#id').val() ;
 		if (id != "") {
 			goConfigUpdate(id);
 		} else {
@@ -69,12 +33,51 @@ AJS.toInit(function(){
 
 //form 초기화
 function setInitForm() {
-	AJS.$('#cfgId').val("");
+	AJS.$('#id').val("");
 	AJS.$("select[id=dply-issue-type] option").remove();
 	AJS.$("select[id=dply-trgt] option").remove();
 	AJS.$("select[id=dply-progress] option").remove();
 	AJS.$("select[id=dply-success] option").remove();
 	AJS.$("select[id=dply-fail] option").remove();
+}
+
+//팝업화면세팅
+function setShowDialog(){
+	AJS.dialog2("#add-dialog").show();
+	var url = contextPath + "/rest/sb/1.0/integration/issueType/"+projKey;
+
+	console.log("url=====>"+url);
+
+	AJS.$.ajax({
+		type: 'get',		
+		url: url, 
+		async: false, 
+		//data: sendData,
+		dataType: 'json',
+		success: function(data, textStatus, jqXHR) {
+			
+			setInitForm();
+			
+			console.log("issueType_list data=====>"+JSON.stringify(data));
+			
+			AJS.$.each(data, function(key) {
+				var info = data[key];
+				AJS.$('#dply-issue-type').append(AJS.$('<option>', { 
+			        value: info.id,
+			        text : info.name
+			    }));
+			});
+
+			var id =  AJS.$('#id').val() ;
+			if (id == "") {
+				setDplyTrgtStatus(data[0].id);
+			}								
+
+		},
+		error :function(jqXHR, textStatus, errorThrown) {
+			alert('error: ' + textStatus);
+		}
+	});	
 }
 
 //onchange 이슈타입 - 배포 대상 이슈 상태 영역 세팅
@@ -104,6 +107,7 @@ function setDplyTrgtStatus(issueTypeId) {
 	});				
 }
 
+//빌드대상 이슈상태 onchange시 사용
 function setDplyProgressFirst(value) {
 	var arrTemp = value.split("*");
 	setDplyProgress(AJS.$('#dply-issue-type').val(), arrTemp[1]);
@@ -230,6 +234,72 @@ function goConfigInsert() {
 	});	
 
 }
+
+
+//보기
+function fn_view(id) {
+	
+	setShowDialog();
+	
+	AJS.$('#id').val(id);
+	
+	// JSON형식으로 변환 할 오브젝트
+	var obj = new Object();
+	
+	// form의 값을 오브젝트에 저장
+	obj.id = id;
+
+	var url = contextPath + "/rest/sb/1.0/integration/select/" + id
+	
+	AJS.$.ajax({
+		type: 'get',		
+		url: url,
+		data: JSON.stringify(obj),
+		dataType: "json",
+        contentType: "application/json; charset=utf-8",		
+		success: function(data, textStatus, response) {
+			/*
+			AJS.messages.success("#aui-message-bar", {
+			    title: 'Success!',
+			    body: '<p> Delete Smart Builder Configuration</p>'
+			});
+			*/
+			console.log("data ::>>>>>> " + JSON.stringify(data));	
+			//값세팅	
+			fn_setValueDialog(data);			
+		},
+		error :function(response, textStatus, errorThrown) {
+			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+		}				
+	});	
+}
+
+//보기 데이터 세팅
+function fn_setValueDialog(data){
+	var issueType = data.issueType;
+
+	var trgt = data.buildTargetId;
+	var trgtStepId = data.buildStepId;
+	
+	var progress = data.buildProgressId;
+	var progressAction = data.buildProgressAction;
+	
+	var success = data.buildSuccessId;
+	var fail = data.buildFailId;
+	
+	AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
+	
+	setDplyTrgtStatus(issueType);	
+	AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
+	
+	//setDplyProgress(issueType, trgtStepId);
+	AJS.$('#dply-progress').val(progress+"*"+progressAction).prop('selected', true);
+	
+	//setSuccessFailStatus(progress);
+	AJS.$('#dply-success').val(success).prop('selected', true);
+	AJS.$('#dply-fail').val(fail).prop('selected', true);
+}
+
 
 
 //삭제
