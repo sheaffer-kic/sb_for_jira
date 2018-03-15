@@ -7,12 +7,17 @@ import javax.xml.bind.annotation.XmlElement;
 public class SbIntegrationConfigVo implements Serializable {
 	private static final long serialVersionUID = -7830516092464822807L;
 
+	@XmlElement(name = "ID")
+	private int ID;
+	
 	@XmlElement(name = "projectKey")
 	private String projectKey; //프로젝트 키
 	
 	@XmlElement(name = "issueType")
 	private String issueType; //이슈타입
 	
+	@XmlElement(name = "issueTypeName")
+	private String issueTypeName; //이슈타입 이름	
 	
 	@XmlElement(name = "buildTargetId")
 	private int buildTargetId; //빌드대상 상태
@@ -48,6 +53,14 @@ public class SbIntegrationConfigVo implements Serializable {
 	@XmlElement(name = "buildFailName")
 	private String buildFailName;//빌드 실패시 수행할 트랜지션 이름
 	
+
+	
+	public int getID() {
+		return ID;
+	}
+	public void setID(int ID) {
+		this.ID = ID;
+	}
 	
 	public String getProjectKey() {
 		return projectKey;
@@ -61,6 +74,12 @@ public class SbIntegrationConfigVo implements Serializable {
 	public void setIssueType(String issueType) {
 		this.issueType = issueType;
 	}
+	public String getIssueTypeName() {
+		return issueTypeName;
+	}
+	public void setIssueTypeName(String issueTypeName) {
+		this.issueTypeName = issueTypeName;
+	}	
 	public int getBuildTargetId() {
 		return buildTargetId;
 	}

@@ -1,33 +1,42 @@
 package com.kic.jira.sb.webwork;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import webwork.action.ServletActionContext;
-
+import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
+import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.message.I18nResolver;
+import com.kic.jira.sb.ao.SbInteConfig;
 import com.kic.jira.sb.service.SbIntegrationConfigService;
+import com.kic.jira.sb.util.SbPluginUtil;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 
+import webwork.action.ServletActionContext;
+
+@Scanned
 public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
-	private static final long serialVersionUID = -4417299931960575349L;
+	private static final long serialVersionUID = 8163482301218352570L;//-4417299931960575349L;
 	private static final Logger logger = LoggerFactory.getLogger(SbIntegrationConifgWebWork.class);
 	
 	private SbIntegrationConfigVo sbInteConfigVo;
 	
+	private List<SbInteConfig> sbInteConfigList;
+	
 	private String projectKey;
 	
 	private final I18nResolver i18nResolver;
-	private final SbIntegrationConfigService sbProjectConfigService;
+	private final SbIntegrationConfigService sbIntegrationConfigService;
 	
 	public SbIntegrationConifgWebWork(@ComponentImport I18nResolver i18nResolver,
-								  SbIntegrationConfigService sbProjectConfigService) {
+			SbIntegrationConfigService sbIntegrationConfigService) {
 		this.i18nResolver = i18nResolver;
-		this.sbProjectConfigService = sbProjectConfigService;
+		this.sbIntegrationConfigService = sbIntegrationConfigService;
 	}
 
 	
@@ -40,9 +49,9 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 		System.out.println("sbproject config de default");
 		try {
 
-			//sbConfigContent = sbConfigService.getSelectSbConfig();
+			sbInteConfigList = sbIntegrationConfigService.getListSbIntegrationConfig();
+			System.out.println("## sbInteConfigListsize : ====>" + sbInteConfigList.size());
 			
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,7 +66,10 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 	public SbIntegrationConfigVo getSbInteConfigVo() {
 		return sbInteConfigVo;
 	}
-
+	
+	public List<SbInteConfig> getSbInteConfigList() {
+		return this.sbInteConfigList;
+	}
 
 	/*
 	 * set ProjectKey
@@ -72,6 +84,142 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
     public String getProjectKey() {
         return this.projectKey;
     }
-    	
 
+    
+	public void doInsert() {
+		System.out.println("doInsert()==========================>1");
+		
+		HttpServletRequest request = ServletActionContext.getRequest();
+		
+		System.out.println("doInsert()==========================>2");		
+		
+		try {
+		
+			String receiveData = SbPluginUtil.getRequestJsonData(request);
+			JSONObject jsonObj = new JSONObject(receiveData.trim());
+			
+			System.out.println("json receiveData===>"+receiveData);
+
+			String projectKey = jsonObj.getString("projectKey"); //프로젝트 키
+			String issueType = jsonObj.getString("issueType"); //이슈타입
+			String issueTypeName = jsonObj.getString("issueTypeName"); //이슈타입 이름
+			int buildTargetId = jsonObj.getInt("trgt"); //빌드대상 상태
+			String buildTargetName = jsonObj.getString("trgtName"); //빌드대상 상태 이름
+			int buildStepId = jsonObj.getInt("trgtStepId"); //buildTargetId 상태에 해당하는 stepId
+			int buildProgressId = jsonObj.getInt("progress"); //빌드중 이슈 상태
+			String buildProgressName = jsonObj.getString("progressName"); //빌드중 이슈 상태 이름
+			int buildProgressAction = jsonObj.getInt("progressAction"); //이 액션(트랜지션)을 수행하면 buildProgressId 상태가 됨.
+			int buildSuccessId = jsonObj.getInt("success"); //빌드 성공시 수행할 트랜지션 
+			String buildSuccessName = jsonObj.getString("successName");//빌드 성공시 수행할 트랜지션 이름
+			int buildFailId = jsonObj.getInt("fail"); //빌드 실패시 수행할 트랜지션
+			String buildFailName = jsonObj.getString("failName");//빌드 실패시 수행할 트랜지션 이름
+
+			SbIntegrationConfigVo sbIntegrationConfigVo = new SbIntegrationConfigVo();			
+			
+			sbIntegrationConfigVo.setProjectKey(projectKey);
+			sbIntegrationConfigVo.setIssueType(issueType);
+			sbIntegrationConfigVo.setIssueTypeName(issueTypeName);
+			sbIntegrationConfigVo.setBuildTargetId(buildTargetId);
+			sbIntegrationConfigVo.setBuildTargetName(buildTargetName);
+			sbIntegrationConfigVo.setBuildStepId(buildStepId);
+			sbIntegrationConfigVo.setBuildProgressId(buildProgressId);
+			sbIntegrationConfigVo.setBuildProgressName(buildProgressName);
+			sbIntegrationConfigVo.setBuildProgressAction(buildProgressAction);
+			sbIntegrationConfigVo.setBuildSuccessId(buildSuccessId);
+			sbIntegrationConfigVo.setBuildSuccessName(buildSuccessName);
+			sbIntegrationConfigVo.setBuildFailId(buildFailId);
+			sbIntegrationConfigVo.setBuildFailName(buildFailName);
+			
+			sbIntegrationConfigService.setInsertSbIntegrationConfig(sbIntegrationConfigVo);	
+			
+			//System.out.println();
+			System.out.println("doInsert()==========================>3");
+		} catch (Exception e) {
+			//logger.debug(e.getMessage());
+			System.out.println("doInsert ====>>>>> e.printStackTrace()=======================>"+e.toString());
+		}	
+	}    
+    
+	public void doUpdate() {
+		System.out.println("doUpdate()==========================>1");
+		
+		HttpServletRequest request = ServletActionContext.getRequest();
+		
+		System.out.println("doUpdate()==========================>2");		
+		
+		try {
+		
+			String receiveData = SbPluginUtil.getRequestJsonData(request);
+			JSONObject jsonObj = new JSONObject(receiveData.trim());
+			
+			System.out.println("json receiveData===>"+receiveData);
+
+			int id = jsonObj.getInt("id");
+			String projectKey = jsonObj.getString("projectKey"); //프로젝트 키
+			String issueType = jsonObj.getString("issueType"); //이슈타입
+			String issueTypeName = jsonObj.getString("issueTypeName"); //이슈타입 이름
+			int buildTargetId = jsonObj.getInt("trgt"); //빌드대상 상태
+			String buildTargetName = jsonObj.getString("trgtName"); //빌드대상 상태 이름
+			int buildStepId = jsonObj.getInt("trgtStepId"); //buildTargetId 상태에 해당하는 stepId
+			int buildProgressId = jsonObj.getInt("progress"); //빌드중 이슈 상태
+			String buildProgressName = jsonObj.getString("progressName"); //빌드중 이슈 상태 이름
+			int buildProgressAction = jsonObj.getInt("progressAction"); //이 액션(트랜지션)을 수행하면 buildProgressId 상태가 됨.
+			int buildSuccessId = jsonObj.getInt("success"); //빌드 성공시 수행할 트랜지션 
+			String buildSuccessName = jsonObj.getString("successName");//빌드 성공시 수행할 트랜지션 이름
+			int buildFailId = jsonObj.getInt("fail"); //빌드 실패시 수행할 트랜지션
+			String buildFailName = jsonObj.getString("failName");//빌드 실패시 수행할 트랜지션 이름
+
+			SbIntegrationConfigVo sbIntegrationConfigVo = new SbIntegrationConfigVo();			
+			
+			sbIntegrationConfigVo.setProjectKey(projectKey);
+			sbIntegrationConfigVo.setIssueType(issueType);
+			sbIntegrationConfigVo.setIssueTypeName(issueTypeName);
+			sbIntegrationConfigVo.setBuildTargetId(buildTargetId);
+			sbIntegrationConfigVo.setBuildTargetName(buildTargetName);
+			sbIntegrationConfigVo.setBuildStepId(buildStepId);
+			sbIntegrationConfigVo.setBuildProgressId(buildProgressId);
+			sbIntegrationConfigVo.setBuildProgressName(buildProgressName);
+			sbIntegrationConfigVo.setBuildProgressAction(buildProgressAction);
+			sbIntegrationConfigVo.setBuildSuccessId(buildSuccessId);
+			sbIntegrationConfigVo.setBuildSuccessName(buildSuccessName);
+			sbIntegrationConfigVo.setBuildFailId(buildFailId);
+			sbIntegrationConfigVo.setBuildFailName(buildFailName);
+			
+			sbIntegrationConfigService.setUpdateSbIntegrationConfig(sbIntegrationConfigVo, id);	
+			
+			//System.out.println();
+			System.out.println("doUpdate()==========================>3");
+		} catch (Exception e) {
+			//logger.debug(e.getMessage());
+			System.out.println("doUpdate ====>>>>> e.printStackTrace()=======================>"+e.toString());
+		}			
+	}
+	
+	public void doDelete() {
+		System.out.println("doDelete()==========================>1");
+		
+		HttpServletRequest request = ServletActionContext.getRequest();
+		
+		System.out.println("doDelete()==========================>2");		
+		
+		try {
+		
+			String receiveData = SbPluginUtil.getRequestJsonData(request);
+			JSONObject jsonObj = new JSONObject(receiveData.trim());
+			
+			System.out.println("json receiveData===>"+receiveData);
+			
+			int id = jsonObj.getInt("id");
+			
+			sbIntegrationConfigService.setDeleteSbIntegrationConfig(id);	
+			
+			//System.out.println();
+			System.out.println("doDelete()==========================>3");
+		} catch (Exception e) {
+			//logger.debug(e.getMessage());
+			System.out.println("doDelete ====>>>>> e.printStackTrace()=======================>"+e.toString());
+		}		
+		
+	}
+	
 }

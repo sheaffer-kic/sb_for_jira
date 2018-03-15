@@ -15,6 +15,10 @@ public interface SbInteConfig extends Entity {
 	//issueType
 	String getIssueType();
 	void setIssueType(String issueType);
+
+	//issueType 이름
+	String getIssueTypeName();
+	void setIssueTypeName(String issueTypeName);
 	
 	//빌드대상 상태  id
 	int getBuildTargetId();

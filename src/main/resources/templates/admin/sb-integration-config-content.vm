@@ -1,8 +1,119 @@
-<section class="aui-page-panel-content">
-	<h2 class="custom-apps-title formtitle">SmartBuild Integration Configuration</h2>
+
+<div class="aui-page-panel-inner">
+	<section class="aui-page-panel-content">
+	    <header class="aui-page-header">
+	        <div class="aui-page-header-inner">
+	            <div class="aui-page-header-main">
+	                <h2>SmartBuild Integration Configuration</h2>
+	            </div>
+	        </div>
+	    </header>
+        <div align="right">
+			<button id="add-integration-button" class="aui-button">
+				<span class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Integration
+			</button>
+        </div>
+	</section><!-- .aui-page-panel-content -->
+</div><!-- .aui-page-panel-inner -->
+
+
+
+
+<!-- list -->
+<div class="auditing-table" style="padding-top:10px;">
+  <table class="aui auditing-records">
+	<thead>
+	  <tr>
+	    <th>Issue type</th>
+	    <th>빌드대상 이슈상태</th>
+	    <th>빌드 수행 액션</th>
+	    <th>빌드성공 수행 시 수행할 액션</th>
+	    <th>빌드실패 수행 시 수행할 액션</th>
+	  </tr>
+	</thead>
 	
-	[추가버튼]<br/>
-	목록화면. projectKey : ${projectKey}<br/>
-	
-	</h2>
-</select
+	<br/><br/>
+	#if ($sbInteConfigList)
+	<tbody>
+		#set ($cnt = 0)
+		#foreach( $list in $sbInteConfigList)
+			<tr class="record-row">
+				<td>$list.issueTypeName</td>
+				<td>$list.buildTargetName</td>
+				<td>$list.buildProgressName</td>
+				<td>$list.buildSuccessName</td>	
+				<td>$list.buildFailName</td>
+				<td data-cell-type="operations">
+					<span class="aui-button aui-button-link show-details" id="edit$cnt" onclick="javascript:fn_edit('$list.ID')"><a href="#">Edit</a></span>
+					<span class="aui-button aui-button-link show-details" id="delete$cnt" onclick="javascript:fn_delete('$list.ID')"><a href="#">Delete</a></span>	
+				</td>
+			</tr>
+			#set ($cnt = $cnt +1)	
+		#end
+	</tbody>
+	#end	
+  </table>
+</div> 
+
+
+
+
+
+<!-- Render the dialog -->
+<section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-large" aria-hidden="true" data-aui-modal="true">
+    <!-- Dialog header -->
+    <header class="aui-dialog2-header">
+        <!-- The dialog's title -->
+        <h2 class="aui-dialog2-header-main">Create SmartBuild Integration Configuration</h2>
+    </header>
+    <!-- Main dialog content -->
+    
+    <div class="aui-dialog2-content">
+		<form id="valid-submit-form"  class="aui">
+			<input type="hidden" name="cfgId" id="cfgId"/>
+		    <!-- issue type -->
+   			<div class="field-group">    
+    			<label for="url">Issue type<span class="aui-icon icon-required">required</span></label>
+			    <select class="select" id="dply-issue-type" name="dply-issue-type" onChange="javascript:setDplyTrgtStatus(this.value)">
+			    </select>
+		    </div>
+		    
+			<!-- 빌드대상 이슈상태 -->		    		    
+    		<div class="field-group">    
+    			<label for="url">빌드대상 이슈상태<span class="aui-icon icon-required">required</span></label>
+    			<select class="select" id="dply-trgt" name="dply-trgt" onChange="javascript:setDplyProgressFirst(this.value)">
+			    </select>  <span id="span-trgt"></span>
+		    </div>
+		    
+		    <!--빌드 수행 액션 -->
+    		<div class="field-group">    
+    			<label for="url">빌드 수행 액션<span class="aui-icon icon-required">required</span></label>
+    			<select class="select" id="dply-progress" name="dply-progress" onChange="javascript:setSuccessFailStatus(this.value)">
+			    </select>
+		    </div>		    
+		    
+		    <!--빌드성공 수행 시 수행할 액션 -->
+    		<div class="field-group">    
+    			<label for="url">빌드성공 수행 시 수행할 액션<span class="aui-icon icon-required">required</span></label>
+    			<select class="select" id="dply-success" name="dply-success">				 
+			    </select> <span id="span-success"></span>
+		    </div>
+		    		    
+			<!--빌드실패 수행 시 수행할 액션 -->
+    		<div class="field-group">    
+    			<label for="url">빌드실패 수행 시 수행할 액션<span class="aui-icon icon-required">required</span></label>
+    			<select class="select" id="dply-fail" name="dply-fail">
+			    </select> <span id="span-fail"></span>
+		    </div>
+		</form>		                     
+    </div>
+    <!-- Dialog footer -->
+    <footer class="aui-dialog2-footer">
+        <!-- Actions to render on the right of the footer -->
+        <div class="aui-dialog2-footer-actions">
+			<button id="dialog-submit-button" class="aui-button aui-button-primary">Save</button>
+			<span>&nbsp;&nbsp;&nbsp;</span>
+			<a href="#" id="dialog-close-button">Close</a>         
+        </div>
+    </footer>
+</section>

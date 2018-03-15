@@ -173,10 +173,6 @@ function fn_delete(id) {
 				});
 				
 				location.href= contextPath + "/secure/admin/SbConfig!default.jspa";
-
-
-				
-				
 			},
 			error :function(response, textStatus, errorThrown) {
 				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);

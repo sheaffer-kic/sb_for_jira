@@ -173,6 +173,8 @@
   	  	
   	<rest name="SmartBuilder Rest Resource" i18n-name-key="sb-rest-resource.name" key="sb-rest-resource" path="/sb" version="1.0">
     	<description>The SmartBuilder Resource Plugin</description>
-  	</rest>    	
+  	</rest> 
+  	
+  	   	
     
 </atlassian-plugin>
