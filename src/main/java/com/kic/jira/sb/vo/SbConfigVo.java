@@ -33,6 +33,13 @@ public class SbConfigVo implements Serializable {
 	@XmlElement(name = "sbCfName")
 	private String sbCfName; //SmartBuildr의 customfield Id
 	
+	
+	@XmlElement(name = "jiraId")
+	private String jiraId; //jira계정
+	
+	@XmlElement(name = "jiraPassword")
+	private String jiraPassword;
+	
 	@XmlElement(name = "regDate")
 	private String regDate;
 	
@@ -81,6 +88,21 @@ public class SbConfigVo implements Serializable {
 		this.sbCfId = sbCfId;
 	}	
 
+	
+	public String getJiraId() {
+		return jiraId;
+	}
+	public void setJiraId(String jiraId) {
+		this.jiraId = jiraId;
+	}
+	
+	public String getJiraPassword() {
+		return jiraPassword;
+	}
+	public void setJiraPassword(String jiraPassword) {
+		this.jiraPassword = jiraPassword;
+	}
+	
 	public String getRegDate(){
 		return regDate;
 	}

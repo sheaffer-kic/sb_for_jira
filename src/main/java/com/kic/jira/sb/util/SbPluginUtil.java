@@ -4,13 +4,13 @@ import java.io.BufferedReader;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Map;
-import java.util.HashMap;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -22,17 +22,8 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-
-import com.atlassian.jira.util.json.JSONArray;
-import com.atlassian.jira.util.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class SbPluginUtil {
 	private static final Logger logger = LoggerFactory.getLogger(SbPluginUtil.class);
@@ -135,7 +126,9 @@ public class SbPluginUtil {
 			
 		HttpClientContext localContext = HttpClientContext.create();		
 		HttpPost postMethod = new HttpPost(uri);
-	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));	
+		//postMethod.setHeader("Content-Type","application/json;charset=utf-8");
+	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));		
+
 	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
 			
 		return response;
