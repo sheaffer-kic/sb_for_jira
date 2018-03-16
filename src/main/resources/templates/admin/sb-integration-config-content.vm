@@ -16,9 +16,6 @@
 	</section><!-- .aui-page-panel-content -->
 </div><!-- .aui-page-panel-inner -->
 
-
-
-
 <!-- list -->
 <div class="auditing-table" style="padding-top:10px;">
   <table class="aui auditing-records">
@@ -29,6 +26,7 @@
 	    <th>빌드 수행 액션</th>
 	    <th>빌드성공 수행 시 수행할 액션</th>
 	    <th>빌드실패 수행 시 수행할 액션</th>
+	    <th>&nbsp;&nbsp;&nbsp;<span class="aui-icon aui-icon-small aui-iconfont-configure"></span></th>
 	  </tr>
 	</thead>
 	
@@ -44,8 +42,8 @@
 				<td>$list.buildSuccessName</td>	
 				<td>$list.buildFailName</td>
 				<td data-cell-type="operations">
-					<span class="aui-button aui-button-link show-details" id="edit$cnt" onclick="javascript:fn_view('$list.ID')"><a href="#">Edit</a></span>
-					<span class="aui-button aui-button-link show-details" id="delete$cnt" onclick="javascript:fn_delete('$list.ID')"><a href="#">Delete</a></span>	
+					<a href="#" onclick="javascript:fn_view('$list.ID');"><span class="aui-icon aui-icon-small aui-iconfont-edit">Edit</span></a>&nbsp;&nbsp;
+					<a href="#" onclick="javascript:fn_delete('$list.ID');"><span class="aui-icon aui-icon-small aui-iconfont-delete">Delete</span></a>	
 				</td>
 			</tr>
 			#set ($cnt = $cnt +1)	
@@ -60,7 +58,7 @@
 
 
 <!-- Render the dialog -->
-<section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-large" aria-hidden="true" data-aui-modal="true">
+<section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true" data-aui-modal="true">
     <!-- Dialog header -->
     <header class="aui-dialog2-header">
         <!-- The dialog's title -->

@@ -48,6 +48,7 @@ function setShowDialog(){
 		async: false, 
 		//data: sendData,
 		dataType: 'json',
+		async: false,
 		success: function(data, textStatus, jqXHR) {
 			
 			setInitForm();
@@ -75,7 +76,14 @@ function setShowDialog(){
 }
 
 //onchange 이슈타입 - 배포 대상 이슈 상태 영역 세팅
-function setDplyTrgtStatus(issueTypeId) {	
+function setDplyTrgtStatus(issueTypeId) {
+	
+	//초기화
+	AJS.$("select[id=dply-trgt] option").remove();
+	AJS.$("select[id=dply-progress] option").remove();
+	AJS.$("select[id=dply-success] option").remove();
+	AJS.$("select[id=dply-fail] option").remove();	
+	
 	var url = contextPath + "/rest/sb/1.0/integration/status/" + projKey + "/" + issueTypeId;
 
 	AJS.$.ajax({
@@ -83,6 +91,7 @@ function setDplyTrgtStatus(issueTypeId) {
 		async: false, 
 		url: url, 
 		dataType: 'json',
+		async: false,
 		success: function(data, textStatus, jqXHR) {		
 			AJS.$("select[id=dply-trgt] option").remove();
 			AJS.$.each(data, function(key) {
@@ -93,7 +102,7 @@ function setDplyTrgtStatus(issueTypeId) {
 			    }));
 			});
 			
-			setDplyProgress(issueTypeId, data[0].stepId);
+			//setDplyProgress(issueTypeId, data[0].stepId);
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -102,27 +111,27 @@ function setDplyTrgtStatus(issueTypeId) {
 }
 
 //빌드대상 이슈상태 onchange시 사용
-function setDplyProgressFirst(value) {
+function setDplyProgressFirst(value) {	
 	var arrTemp = value.split("*");
 	setDplyProgress(AJS.$('#dply-issue-type').val(), arrTemp[1]);
 }
 
 //빌드를 수행할 액션
 function setDplyProgress(issueTypeId, trgtStepId) {
-	var projKey = AJS.$("meta[name='projectKey']").attr('content');
-	var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
 	
-	// /netxt/status/{projectKey}/{issueTypeId}/{stepId}")
+	//초기화
+	//AJS.$("select[id=dply-trgt] option").remove();
+	AJS.$("select[id=dply-progress] option").remove();
+	AJS.$("select[id=dply-success] option").remove();
+	AJS.$("select[id=dply-fail] option").remove();
+	
 	var url = contextPath + "/rest/sb/1.0/integration/next/status/" + projKey + "/" + issueTypeId + "/" + trgtStepId;
 	AJS.$.ajax({
 		type: 'get',		
 		url: url, 
 		dataType: 'json',
+		async: false,
 		success: function(data, textStatus, jqXHR) {		
-			//AJS.$("select[id=dply-trgt] option").remove();
-			AJS.$("select[id=dply-progress] option").remove();
-			AJS.$("select[id=dply-success] option").remove();
-			AJS.$("select[id=dply-fail] option").remove();
 			AJS.$.each(data, function(key) {
 				var info = data[key];				
 				AJS.$('#dply-progress').append(AJS.$('<option>', { 
@@ -131,7 +140,7 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 			    }));	
 			
 			});			
-			setSuccessFailStatus(data[0].id);
+			//setSuccessFailStatus(data[0].id);
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -143,14 +152,20 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 function setSuccessFailStatus(value) {
 	var arrTemp = value.split("*");
 	var issueTypeId =  AJS.$('#dply-issue-type').val() ;
+
+	//초기화
+	//AJS.$("select[id=dply-trgt] option").remove();
+	//AJS.$("select[id=dply-progress] option").remove();
+	AJS.$("select[id=dply-success] option").remove();
+	AJS.$("select[id=dply-fail] option").remove();	
 	
-	//ur : http://localhost:9080/rest/jenkins/1/action/NK/10002/10306	
 	var url = contextPath + "/rest/sb/1.0/integration/action/" + projKey + "/" + issueTypeId + "/" + arrTemp[0];
 	
 	AJS.$.ajax({
 		type: 'get',		
 		url: url, 
 		dataType: 'json',
+		async: false,
 		success: function(data, textStatus, jqXHR) {		
 			AJS.$("select[id=dply-success] option").remove();
 			AJS.$("select[id=dply-fail] option").remove();
@@ -218,7 +233,8 @@ function goConfigSave() {
 		url: url,
 		data: JSON.stringify(obj),
 		//dataType: "json",
-        contentType: "application/json; charset=utf-8",		
+        contentType: "application/json; charset=utf-8",	
+        async: false,
 		success: function(data, textStatus, response) {
 			AJS.dialog2("#add-dialog").hide();
 			location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
@@ -250,7 +266,8 @@ function fn_view(id) {
 		url: url,
 		data: JSON.stringify(obj),
 		dataType: "json",
-        contentType: "application/json; charset=utf-8",		
+        contentType: "application/json; charset=utf-8",	
+        async: false,
 		success: function(data, textStatus, response) {
 			/*
 			AJS.messages.success("#aui-message-bar", {
@@ -286,8 +303,14 @@ function fn_setValueDialog(data){
 	setDplyTrgtStatus(issueType);
 	AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
 	
-	AJS.$('#dply-progress').val(progress+"*"+progressAction).prop('selected', true);
+	console.log("dply-progress get befor====>"+AJS.$('#dply-progress').val());
+	setDplyProgress(issueType, trgtStepId);		
+	var concatProgress = progress+"*"+progressAction;
+	AJS.$('#dply-progress').val(concatProgress).prop('selected', true);
+	console.log("concatProgress====>"+concatProgress);
+	console.log("dply-progress get after ====>"+AJS.$('#dply-progress').val());	
 	
+	setSuccessFailStatus(concatProgress);
 	AJS.$('#dply-success').val(success).prop('selected', true);
 	AJS.$('#dply-fail').val(fail).prop('selected', true);
 }
@@ -311,7 +334,8 @@ function fn_delete(id) {
 			url: url,
 			data: JSON.stringify(obj),
 			//dataType: "json",
-	        contentType: "application/json; charset=utf-8",		
+	        contentType: "application/json; charset=utf-8",	
+	        async: false,
 			success: function(data, textStatus, response) {
 				/*
 				AJS.messages.success("#aui-message-bar", {
