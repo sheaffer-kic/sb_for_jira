@@ -20,14 +20,8 @@ AJS.toInit(function(){
 
 	// save 버튼(Add Configuration_)
 	AJS.$("#dialog-submit-button").click(function(e) {
-		e.preventDefault();
-		
-		var id =  AJS.$('#id').val() ;
-		if (id != "") {
-			goConfigUpdate(id);
-		} else {
-			goConfigInsert();
-		}
+		e.preventDefault();		
+		goConfigSave();
 	});	
 });
 
@@ -75,7 +69,7 @@ function setShowDialog(){
 
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
-			alert('error: ' + textStatus);
+			console.log('error: ' + textStatus);
 		}
 	});	
 }
@@ -102,7 +96,7 @@ function setDplyTrgtStatus(issueTypeId) {
 			setDplyProgress(issueTypeId, data[0].stepId);
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
-			alert('error: ' + textStatus);
+			console.log('error: ' + textStatus);
 		}
 	});				
 }
@@ -140,7 +134,7 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 			setSuccessFailStatus(data[0].id);
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
-			alert('error: ' + textStatus);
+			console.log('error: ' + textStatus);
 		}
 	});		
 }
@@ -174,15 +168,15 @@ function setSuccessFailStatus(value) {
 			});
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
-			alert('error: ' + textStatus);
+			console.log('error: ' + textStatus);
 		}
 	});		
 }
 
 
-//저장
-function goConfigInsert() {
-	console.log(" ::>>>>>> insert ::>>>>>> ");
+//저장(등록, 수정)
+function goConfigSave() {
+	console.log(" ::>>>>>> Save ::>>>>>> ");
 	
 	var obj = new Object();	   
 	// form의 값을 오브젝트에 저장
@@ -210,10 +204,12 @@ function goConfigInsert() {
 	obj.fail = fail;
 	obj.failName = AJS.$("#dply-fail option[value='"+fail+"']").text();
 	
-	//obj.arrTrgt = trgt.split("*");
-	//obj.arrProgress = progress.split("*");
+	var id =  AJS.$('#id').val() ;
+	if (id != "") {
+		obj.id = id;		
+	}
 	
-	var url = contextPath + "/secure/SbIntegrationConfig!insert.jspa";
+	url = contextPath + "/secure/SbIntegrationConfig!save.jspa";
 
 	console.log("obj ::>>>>>> " + JSON.stringify(obj));	
 	
@@ -228,13 +224,11 @@ function goConfigInsert() {
 			location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
 		},
 		error :function(response, textStatus, errorThrown) {
-			alert("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
 		}
 		
 	});	
-
 }
-
 
 //보기
 function fn_view(id) {
@@ -289,13 +283,11 @@ function fn_setValueDialog(data){
 	
 	AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
 	
-	setDplyTrgtStatus(issueType);	
+	setDplyTrgtStatus(issueType);
 	AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
 	
-	//setDplyProgress(issueType, trgtStepId);
 	AJS.$('#dply-progress').val(progress+"*"+progressAction).prop('selected', true);
 	
-	//setSuccessFailStatus(progress);
 	AJS.$('#dply-success').val(success).prop('selected', true);
 	AJS.$('#dply-fail').val(fail).prop('selected', true);
 }

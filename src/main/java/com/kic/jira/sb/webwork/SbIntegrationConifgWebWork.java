@@ -78,16 +78,13 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
     public String getProjectKey() {
         return this.projectKey;
     }
-
     
-
-    
-	public void doInsert() {
-		System.out.println("doInsert()==========================>1");
+	public void doSave() {
+		System.out.println("doSave()==========================>1");
 		
 		HttpServletRequest request = ServletActionContext.getRequest();
 		
-		System.out.println("doInsert()==========================>2");		
+		System.out.println("doSave()==========================>2");		
 		
 		try {
 		
@@ -95,7 +92,8 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 			JSONObject jsonObj = new JSONObject(receiveData.trim());
 			
 			System.out.println("json receiveData===>"+receiveData);
-
+			
+			
 			String projectKey = jsonObj.getString("projectKey"); //프로젝트 키
 			String issueType = jsonObj.getString("issueType"); //이슈타입
 			String issueTypeName = jsonObj.getString("issueTypeName"); //이슈타입 이름
@@ -126,68 +124,21 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 			sbIntegrationConfigVo.setBuildFailId(buildFailId);
 			sbIntegrationConfigVo.setBuildFailName(buildFailName);
 			
-			sbIntegrationConfigService.setInsertSbIntegrationConfig(sbIntegrationConfigVo);	
+			
+			if(jsonObj.has("id")){
+				System.out.println("update==========================>");
+				int id = jsonObj.getInt("id");
+				sbIntegrationConfigService.setUpdateSbIntegrationConfig(sbIntegrationConfigVo, id);
+			}else{
+				System.out.println("insert==========================>");
+				sbIntegrationConfigService.setInsertSbIntegrationConfig(sbIntegrationConfigVo);
+			}
 			
 			//System.out.println();
-			System.out.println("doInsert()==========================>3");
+			System.out.println("doSave()==========================>3");
 		} catch (Exception e) {
 			//logger.debug(e.getMessage());
-			System.out.println("doInsert ====>>>>> e.printStackTrace()=======================>"+e.toString());
-		}	
-	}    
-    
-	public void doUpdate() {
-		System.out.println("doUpdate()==========================>1");
-		
-		HttpServletRequest request = ServletActionContext.getRequest();
-		
-		System.out.println("doUpdate()==========================>2");		
-		
-		try {
-		
-			String receiveData = SbPluginUtil.getRequestJsonData(request);
-			JSONObject jsonObj = new JSONObject(receiveData.trim());
-			
-			System.out.println("json receiveData===>"+receiveData);
-
-			int id = jsonObj.getInt("id");
-			String projectKey = jsonObj.getString("projectKey"); //프로젝트 키
-			String issueType = jsonObj.getString("issueType"); //이슈타입
-			String issueTypeName = jsonObj.getString("issueTypeName"); //이슈타입 이름
-			int buildTargetId = jsonObj.getInt("trgt"); //빌드대상 상태
-			String buildTargetName = jsonObj.getString("trgtName"); //빌드대상 상태 이름
-			int buildStepId = jsonObj.getInt("trgtStepId"); //buildTargetId 상태에 해당하는 stepId
-			int buildProgressId = jsonObj.getInt("progress"); //빌드중 이슈 상태
-			String buildProgressName = jsonObj.getString("progressName"); //빌드중 이슈 상태 이름
-			int buildProgressAction = jsonObj.getInt("progressAction"); //이 액션(트랜지션)을 수행하면 buildProgressId 상태가 됨.
-			int buildSuccessId = jsonObj.getInt("success"); //빌드 성공시 수행할 트랜지션 
-			String buildSuccessName = jsonObj.getString("successName");//빌드 성공시 수행할 트랜지션 이름
-			int buildFailId = jsonObj.getInt("fail"); //빌드 실패시 수행할 트랜지션
-			String buildFailName = jsonObj.getString("failName");//빌드 실패시 수행할 트랜지션 이름
-
-			SbIntegrationConfigVo sbIntegrationConfigVo = new SbIntegrationConfigVo();			
-			
-			sbIntegrationConfigVo.setProjectKey(projectKey);
-			sbIntegrationConfigVo.setIssueType(issueType);
-			sbIntegrationConfigVo.setIssueTypeName(issueTypeName);
-			sbIntegrationConfigVo.setBuildTargetId(buildTargetId);
-			sbIntegrationConfigVo.setBuildTargetName(buildTargetName);
-			sbIntegrationConfigVo.setBuildStepId(buildStepId);
-			sbIntegrationConfigVo.setBuildProgressId(buildProgressId);
-			sbIntegrationConfigVo.setBuildProgressName(buildProgressName);
-			sbIntegrationConfigVo.setBuildProgressAction(buildProgressAction);
-			sbIntegrationConfigVo.setBuildSuccessId(buildSuccessId);
-			sbIntegrationConfigVo.setBuildSuccessName(buildSuccessName);
-			sbIntegrationConfigVo.setBuildFailId(buildFailId);
-			sbIntegrationConfigVo.setBuildFailName(buildFailName);
-			
-			sbIntegrationConfigService.setUpdateSbIntegrationConfig(sbIntegrationConfigVo, id);	
-			
-			//System.out.println();
-			System.out.println("doUpdate()==========================>3");
-		} catch (Exception e) {
-			//logger.debug(e.getMessage());
-			System.out.println("doUpdate ====>>>>> e.printStackTrace()=======================>"+e.toString());
+			System.out.println("doSave ====>>>>> e.printStackTrace()=======================>"+e.toString());
 		}			
 	}
 	
