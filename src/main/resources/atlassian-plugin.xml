@@ -175,6 +175,49 @@
     	<description>The SmartBuilder Resource Plugin</description>
   	</rest> 
   	
+  	
+  	
+  	<!--  for test -->
+<!--     <web-resource key="wr-global-resource" name="wr-global-resource">
+        <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+            
+    	<dependency>com.atlassian.auiplugin:ajs</dependency>
+    	<resource type="download" name="sb-global.js" location="/js/sb-global.js"/>
+	    <context>atl.general</context>
+	    <context>atl.admin</context>
+    </web-resource> -->
+    
+    <!--  contextPath/plugins/servlet/todo/list-->
+<!-- 	<servlet name="ao-tutorial-statge" class="com.kic.jira.sb.listener.TodoServlet" key="test">
+        <url-pattern>/todo/list</url-pattern>
+    </servlet>
+      	 -->
+      	
   	   	
+  	<!-- profile > tools -->
+<!-- 	<web-item key="wi-sb-message" name="wi-sb-message"
+				section="system.user.profile.links/operations" 
+				weight="900">
+		<description>SmartBuilder</description>				
+		<label>SmartBuilder</label>
+		<link linkId="wi-sb-config-id2">
+				/secure/admin/SbConfig!default.jspa
+		</link>
+	</web-item>  -->
+	
+	<!-- top navigation -->
+	<web-item key="wi-sb-message" name="wi-sb-message"
+				section="system.top.navigation.bar" 
+				weight="900">
+		<description>SmartBuilder</description>				
+		<label>SmartBuilder</label>
+		<link linkId="wi-sb-config-id2">
+				/secure/admin/SbConfig!default.jspa
+		</link>
+	</web-item>	
+
+	  	   	
     
 </atlassian-plugin>
