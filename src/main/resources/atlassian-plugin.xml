@@ -208,16 +208,14 @@
 	</web-item>  -->
 	
 	<!-- top navigation -->
-	<web-item key="wi-sb-message" name="wi-sb-message"
+<!-- 	<web-item key="wi-sb-message" name="wi-sb-message"
 				section="system.top.navigation.bar" 
-				weight="900">
-		<description>SmartBuilder</description>				
-		<label>SmartBuilder</label>
+				weight="900">			
+		<label>SmartBuilder2</label>
 		<link linkId="wi-sb-config-id2">
-				/secure/admin/SbConfig!default.jspa
+				/secure/admin/SbMessage!default.jspa
 		</link>
 	</web-item>	
-
-	  	   	
+ -->
     
 </atlassian-plugin>
