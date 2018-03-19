@@ -2,7 +2,7 @@
 #foreach($list in $sbList)
 	#foreach($log in $list)
 		#if($log.projResult.indexOf("2") > 0)
-			<a target="_blank" href="#">
+			<a>
 		#else
 			<a target="_blank" href="$url?resultId=$log.projResultId">			
 		#end		
