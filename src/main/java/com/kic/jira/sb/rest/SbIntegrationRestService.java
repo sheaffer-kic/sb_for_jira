@@ -202,6 +202,35 @@ public class SbIntegrationRestService {
 			e.printStackTrace();
 		}
 		return sbIntegrationConfigVo;	
+    }
+	
+	//http://localhost:2990/jira/rest/sb/1.0/integration/dupCheck/ST1/10001
+	@GET
+    @Path("/dupCheck/{projectKey}/{issueTypeId}")
+	@Produces({MediaType.APPLICATION_JSON})			
+    public SbIntegrationConfigVo getSelectSbIntegrationConfig(@PathParam("projectKey") String projectKey, 
+            @PathParam("issueTypeId") String issueTypeId){
+		SbIntegrationConfigVo sbIntegrationConfigVo = null;
+		//String isDup = "N";
+		try {
+			sbIntegrationConfigVo = sbIntegrationConfigService.getSelectSbIntegrationConfig(projectKey, issueTypeId);	
+			
+			System.out.println("projectKey is ======>"+projectKey);
+			System.out.println("issueTypeId is ======>"+issueTypeId);
+			System.out.println("sbIntegrationConfigVo.getProjectKey()======>"+sbIntegrationConfigVo.getProjectKey());
+			System.out.println("sbIntegrationConfigVo.getIssueType()======>"+sbIntegrationConfigVo.getIssueType());
+			
+			
+			//if(sbIntegrationConfigVo.getProjectKey() != null && sbIntegrationConfigVo.getIssueType() != null){
+			//	isDup = "Y";
+			//}
+			
+			//System.out.println("sbIntegrationConfigVo is isDup======>"+isDup);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return sbIntegrationConfigVo;	
     }	
 
 }

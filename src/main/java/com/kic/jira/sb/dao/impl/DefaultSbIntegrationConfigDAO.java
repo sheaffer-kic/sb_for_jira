@@ -63,7 +63,6 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
             	sbIntegrationConfigVo.setID(t.getID());
         		sbIntegrationConfigVo.setProjectKey(t.getProjectKey());
         		sbIntegrationConfigVo.setIssueType(t.getIssueType());
-        		sbIntegrationConfigVo.setIssueType(t.getIssueTypeName());
         		sbIntegrationConfigVo.setIssueTypeName(t.getIssueTypeName());
         		sbIntegrationConfigVo.setBuildTargetId(t.getBuildTargetId());
         		sbIntegrationConfigVo.setBuildTargetName(t.getBuildTargetName());

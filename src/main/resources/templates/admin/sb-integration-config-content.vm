@@ -1,3 +1,4 @@
+<div id="aui-message-bar" fadeout style="width:400px; margin-left:-700;"></div>
 
 <div class="aui-page-panel-inner">
 	<section class="aui-page-panel-content">
@@ -15,6 +16,8 @@
         </div>
 	</section><!-- .aui-page-panel-content -->
 </div><!-- .aui-page-panel-inner -->
+
+
 
 <!-- list -->
 <div class="auditing-table" style="padding-top:10px;">
@@ -64,9 +67,10 @@
         <!-- The dialog's title -->
         <h2 class="aui-dialog2-header-main">Create SmartBuild Integration Configuration</h2>
     </header>
-    <!-- Main dialog content -->
-    
+    <!-- Main dialog content -->    
+   
     <div class="aui-dialog2-content">
+    	<div id="aui-message-bar-dialog" fadeout"></div>
 		<form id="valid-submit-form"  class="aui">
 			<input type="hidden" name="id" id="id">
 		    <!-- issue type -->

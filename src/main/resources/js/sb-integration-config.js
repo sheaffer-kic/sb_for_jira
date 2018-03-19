@@ -1,5 +1,6 @@
 var projKey;
 var contextPath;
+var getObjData;
 
 AJS.toInit(function(){
 	//require(['aui/form-validation']);
@@ -26,7 +27,10 @@ AJS.toInit(function(){
 });
 
 //form 초기화
-function setInitForm() {
+function setInitForm() {	
+	if(AJS.$('#id').val()==""){		
+		getObjData = null;
+	}
 	AJS.$('#id').val("");
 	AJS.$("select[id=dply-issue-type] option").remove();
 	AJS.$("select[id=dply-trgt] option").remove();
@@ -63,11 +67,15 @@ function setShowDialog(){
 			    }));
 			});
 
-			var id =  AJS.$('#id').val() ;
-			if (id == "") {
+			
+			
+			if(getObjData==null){
 				setDplyTrgtStatus(data[0].id);
-			}								
-
+			}else{
+				var issueType = getObjData.issueType;
+				AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
+				setDplyTrgtStatus(issueType);
+			}
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -102,7 +110,16 @@ function setDplyTrgtStatus(issueTypeId) {
 			    }));
 			});
 			
-			//setDplyProgress(issueTypeId, data[0].stepId);
+			if(getObjData==null){
+				setDplyProgress(issueTypeId, data[0].stepId);
+			}else{
+				var trgt = getObjData.buildTargetId;
+				var trgtStepId = getObjData.buildStepId;
+				
+				AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
+				setDplyProgress(issueTypeId, trgtStepId);
+			}
+			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -140,7 +157,17 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 			    }));	
 			
 			});			
-			//setSuccessFailStatus(data[0].id);
+			
+			if(getObjData==null){
+				setSuccessFailStatus(data[0].id);
+			}else{
+				var progress = getObjData.buildProgressId;
+				var progressAction = getObjData.buildProgressAction;				
+				var concatProgress = progress+"*"+progressAction;
+				AJS.$('#dply-progress').val(concatProgress).prop('selected', true);
+				setSuccessFailStatus(concatProgress);
+			}
+			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -181,6 +208,14 @@ function setSuccessFailStatus(value) {
 			        text : info.name
 			    }));				
 			});
+			
+			if(getObjData!=null){
+				var success = getObjData.buildSuccessId;
+				var fail = getObjData.buildFailId;				
+				AJS.$('#dply-success').val(success).prop('selected', true);
+				AJS.$('#dply-fail').val(fail).prop('selected', true);	
+			}
+			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -220,10 +255,20 @@ function goConfigSave() {
 	obj.failName = AJS.$("#dply-fail option[value='"+fail+"']").text();
 	
 	var id =  AJS.$('#id').val() ;
+	var isDup = "N";
 	if (id != "") {
 		obj.id = id;		
+	}else{
+		//중복체크
+		isDup = fn_dupCheck(projKey, issueType);
 	}
 	
+	if(isDup != "N"){
+		console.log("isDup !!!! ::>>>>>> " + isDup);	
+		return;
+	}
+	
+ 	
 	url = contextPath + "/secure/SbIntegrationConfig!save.jspa";
 
 	console.log("obj ::>>>>>> " + JSON.stringify(obj));	
@@ -236,6 +281,10 @@ function goConfigSave() {
         contentType: "application/json; charset=utf-8",	
         async: false,
 		success: function(data, textStatus, response) {
+			AJS.messages.success("#aui-message-bar", {
+			    title: 'Success!',
+			    body: '<p> Save Smart Builder Configuration</p>'
+			});
 			AJS.dialog2("#add-dialog").hide();
 			location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
 		},
@@ -246,47 +295,74 @@ function goConfigSave() {
 	});	
 }
 
+//중복체크
+function fn_dupCheck(projKey, issueType) {
+
+	var url = contextPath + "/rest/sb/1.0/integration/dupCheck/" + projKey +"/"+ issueType
+	
+	//console.log("fn_dupCheck url===>"+url);
+	
+	var isDup = "N";
+	
+	AJS.$.ajax({
+		type: 'get',		
+		url: url,
+		//data: JSON.stringify(obj),
+		dataType: "json",
+        contentType: "application/json; charset=utf-8",	
+        async: false,
+		success: function(data, textStatus, response) {
+
+			if(data.projectKey != null && data.issueType != null){
+				isDup = "Y";
+				AJS.messages.error("#aui-message-bar-dialog", {
+				    title: 'Fail!',
+				    body: '<p> Duplication Smart Builder Configuration</p>'
+				});				
+			}			
+		},
+		error :function(response, textStatus, errorThrown) {
+			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+			isDup = "Error";
+		}				
+	});
+	
+	return isDup;
+}
+
 //보기
-function fn_view(id) {
-	
-	setShowDialog();
-	
+function fn_view(id) {	
+	getObjData = null;
 	AJS.$('#id').val(id);
 	
-	// JSON형식으로 변환 할 오브젝트
-	var obj = new Object();
-	
-	// form의 값을 오브젝트에 저장
-	obj.id = id;
-
 	var url = contextPath + "/rest/sb/1.0/integration/select/" + id
 	
 	AJS.$.ajax({
 		type: 'get',		
 		url: url,
-		data: JSON.stringify(obj),
+		//data: JSON.stringify(obj),
 		dataType: "json",
         contentType: "application/json; charset=utf-8",	
         async: false,
 		success: function(data, textStatus, response) {
-			/*
-			AJS.messages.success("#aui-message-bar", {
-			    title: 'Success!',
-			    body: '<p> Delete Smart Builder Configuration</p>'
-			});
-			*/
 			console.log("data ::>>>>>> " + JSON.stringify(data));	
 			//값세팅	
-			fn_setValueDialog(data);			
+			//fn_setValueDialog(data);
+			getObjData = data;
+			
+			setShowDialog();
 		},
 		error :function(response, textStatus, errorThrown) {
 			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
 		}				
-	});	
+	});		
+	
+	
 }
 
-//보기 데이터 세팅
+//보기 데이터 세팅 - 안씀
 function fn_setValueDialog(data){
+/*
 	var issueType = data.issueType;
 
 	var trgt = data.buildTargetId;
@@ -313,6 +389,7 @@ function fn_setValueDialog(data){
 	setSuccessFailStatus(concatProgress);
 	AJS.$('#dply-success').val(success).prop('selected', true);
 	AJS.$('#dply-fail').val(fail).prop('selected', true);
+*/
 }
 
 
@@ -337,12 +414,10 @@ function fn_delete(id) {
 	        contentType: "application/json; charset=utf-8",	
 	        async: false,
 			success: function(data, textStatus, response) {
-				/*
 				AJS.messages.success("#aui-message-bar", {
 				    title: 'Success!',
-				    body: '<p> Delete Smart Builder Configuration</p>'
+				    body: '<p> Delete SmartBuild Integration Configuration</p>'
 				});
-				*/
 				location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
 			},
 			error :function(response, textStatus, errorThrown) {
