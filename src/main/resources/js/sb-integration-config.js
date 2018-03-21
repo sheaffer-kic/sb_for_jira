@@ -1,6 +1,6 @@
 var projKey;
 var contextPath;
-var getObjData;
+
 
 AJS.toInit(function(){
 	//require(['aui/form-validation']);
@@ -10,7 +10,9 @@ AJS.toInit(function(){
 	
 	//Add Configuration
 	AJS.$("#add-integration-button").click(function() {			
+		setInitForm();
 		setShowDialog();
+		setDplyIssueType();
 	});	
 	
 	// Hides the dialog (Add Configuration_)
@@ -28,9 +30,6 @@ AJS.toInit(function(){
 
 //form 초기화
 function setInitForm() {	
-	if(AJS.$('#id').val()==""){		
-		getObjData = null;
-	}
 	AJS.$('#id').val("");
 	AJS.$("select[id=dply-issue-type] option").remove();
 	AJS.$("select[id=dply-trgt] option").remove();
@@ -39,9 +38,20 @@ function setInitForm() {
 	AJS.$("select[id=dply-fail] option").remove();
 }
 
-//팝업화면세팅
-function setShowDialog(){
-	AJS.dialog2("#add-dialog").show();
+//팝업창오픈
+function setShowDialog(){	
+	AJS.dialog2("#add-dialog").show();	
+}
+
+//이슈타입가져오기
+function setDplyIssueType(){
+	
+	//초기화
+	AJS.$("select[id=dply-trgt] option").remove();
+	AJS.$("select[id=dply-progress] option").remove();
+	AJS.$("select[id=dply-success] option").remove();
+	AJS.$("select[id=dply-fail] option").remove();	
+
 	var url = contextPath + "/rest/sb/1.0/integration/issueType/"+projKey;
 
 	console.log("url=====>"+url);
@@ -49,14 +59,10 @@ function setShowDialog(){
 	AJS.$.ajax({
 		type: 'get',		
 		url: url, 
-		async: false, 
-		//data: sendData,
 		dataType: 'json',
 		async: false,
 		success: function(data, textStatus, jqXHR) {
-			
-			setInitForm();
-			
+		
 			console.log("issueType_list data=====>"+JSON.stringify(data));
 			
 			AJS.$.each(data, function(key) {
@@ -67,15 +73,9 @@ function setShowDialog(){
 			    }));
 			});
 
-			
-			
-			if(getObjData==null){
-				setDplyTrgtStatus(data[0].id);
-			}else{
-				var issueType = getObjData.issueType;
-				AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
-				setDplyTrgtStatus(issueType);
-			}
+			//if(AJS.$('#id').val() == ""){
+			setDplyTrgtStatus(data[0].id);
+			//}
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
 			console.log('error: ' + textStatus);
@@ -96,7 +96,6 @@ function setDplyTrgtStatus(issueTypeId) {
 
 	AJS.$.ajax({
 		type: 'get',	
-		async: false, 
 		url: url, 
 		dataType: 'json',
 		async: false,
@@ -110,6 +109,8 @@ function setDplyTrgtStatus(issueTypeId) {
 			    }));
 			});
 			
+			
+			/*
 			if(getObjData==null){
 				setDplyProgress(issueTypeId, data[0].stepId);
 			}else{
@@ -119,6 +120,7 @@ function setDplyTrgtStatus(issueTypeId) {
 				AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
 				setDplyProgress(issueTypeId, trgtStepId);
 			}
+			*/
 			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
@@ -129,6 +131,10 @@ function setDplyTrgtStatus(issueTypeId) {
 
 //빌드대상 이슈상태 onchange시 사용
 function setDplyProgressFirst(value) {	
+	if(value == null || value == ""){
+		return;
+	}
+	
 	var arrTemp = value.split("*");
 	setDplyProgress(AJS.$('#dply-issue-type').val(), arrTemp[1]);
 }
@@ -158,6 +164,8 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 			
 			});			
 			
+			
+			/*
 			if(getObjData==null){
 				setSuccessFailStatus(data[0].id);
 			}else{
@@ -167,6 +175,7 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 				AJS.$('#dply-progress').val(concatProgress).prop('selected', true);
 				setSuccessFailStatus(concatProgress);
 			}
+			*/
 			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
@@ -177,6 +186,11 @@ function setDplyProgress(issueTypeId, trgtStepId) {
 
 //onchange 배포중 이슈 상태 -   배포 성공 시 수행할 액션, 배포 실패 시 수행 할 액션 영역 세팅
 function setSuccessFailStatus(value) {
+	
+	if(value == null || value == ""){
+		return;
+	}
+	
 	var arrTemp = value.split("*");
 	var issueTypeId =  AJS.$('#dply-issue-type').val() ;
 
@@ -209,12 +223,14 @@ function setSuccessFailStatus(value) {
 			    }));				
 			});
 			
+			/*
 			if(getObjData!=null){
 				var success = getObjData.buildSuccessId;
 				var fail = getObjData.buildFailId;				
 				AJS.$('#dply-success').val(success).prop('selected', true);
 				AJS.$('#dply-fail').val(fail).prop('selected', true);	
 			}
+			*/
 			
 		},
 		error :function(jqXHR, textStatus, errorThrown) {
@@ -237,22 +253,48 @@ function goConfigSave() {
 	obj.issueTypeName = AJS.$("#dply-issue-type option[value='"+issueType+"']").text();
 	
 	var trgt = AJS.$('#dply-trgt').val();
-	obj.trgt = trgt.split("*")[0];
-	obj.trgtName = AJS.$("#dply-trgt option[value='"+trgt+"']").text();
-	obj.trgtStepId = trgt.split("*")[1];
+	if(trgt == null || trgt == ""){
+		obj.trgt = 0;
+		obj.trgtName = "";
+		obj.trgtStepId = 0;
+	}else{
+		obj.trgt = trgt.split("*")[0];
+		obj.trgtName = AJS.$("#dply-trgt option[value='"+trgt+"']").text();
+		obj.trgtStepId = trgt.split("*")[1];		
+	}
+
 	
 	var progress = AJS.$('#dply-progress').val();
-	obj.progress = progress.split("*")[0];
-	obj.progressName = AJS.$("#dply-progress option[value='"+progress+"']").text();
-	obj.progressAction = progress.split("*")[1];
+	if(progress == null || progress == ""){
+		obj.progress = 0;
+		obj.progressName = "";
+		obj.progressAction = 0;
+	}else{
+		obj.progress = progress.split("*")[0];
+		obj.progressName = AJS.$("#dply-progress option[value='"+progress+"']").text();
+		obj.progressAction = progress.split("*")[1];		
+	}	
+
 	
 	var success = AJS.$('#dply-success').val();
-	obj.success = success;
-	obj.successName = AJS.$("#dply-success option[value='"+success+"']").text();				
+	if(success == null || success == ""){
+		obj.success = 0;
+		obj.successName = "";
+	}else{
+		obj.success = success;
+		obj.successName = AJS.$("#dply-success option[value='"+success+"']").text();
+	}
+					
 	
 	var fail = AJS.$('#dply-fail').val();
-	obj.fail = fail;
-	obj.failName = AJS.$("#dply-fail option[value='"+fail+"']").text();
+	if(fail == null || fail == ""){
+		obj.fail = 0;
+		obj.failName = "";
+	}else{
+		obj.fail = fail;
+		obj.failName = AJS.$("#dply-fail option[value='"+fail+"']").text();
+	}	
+
 	
 	var id =  AJS.$('#id').val() ;
 	var isDup = "N";
@@ -317,7 +359,8 @@ function fn_dupCheck(projKey, issueType) {
 				isDup = "Y";
 				AJS.messages.error("#aui-message-bar-dialog", {
 				    title: 'Fail!',
-				    body: '<p> Duplication Smart Builder Configuration</p>'
+				    body: '<p> Duplication Smart Builder Configuration</p>',
+				    fadeout : true
 				});				
 			}			
 		},
@@ -330,9 +373,10 @@ function fn_dupCheck(projKey, issueType) {
 	return isDup;
 }
 
+
+
 //보기
 function fn_view(id) {	
-	getObjData = null;
 	AJS.$('#id').val(id);
 	
 	var url = contextPath + "/rest/sb/1.0/integration/select/" + id
@@ -346,23 +390,24 @@ function fn_view(id) {
         async: false,
 		success: function(data, textStatus, response) {
 			console.log("data ::>>>>>> " + JSON.stringify(data));	
-			//값세팅	
-			//fn_setValueDialog(data);
-			getObjData = data;
-			
+				
 			setShowDialog();
+			
+			setDplyIssueType();
+			
+			//값세팅
+			fn_setViewData(data);
 		},
 		error :function(response, textStatus, errorThrown) {
 			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
 		}				
-	});		
-	
-	
+	});	
 }
 
-//보기 데이터 세팅 - 안씀
-function fn_setValueDialog(data){
-/*
+
+//보기 데이터 세팅
+function fn_setViewData(data){
+
 	var issueType = data.issueType;
 
 	var trgt = data.buildTargetId;
@@ -374,7 +419,8 @@ function fn_setValueDialog(data){
 	var success = data.buildSuccessId;
 	var fail = data.buildFailId;
 	
-	AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
+	//AJS.$('#dply-issue-type').val(issueType).prop('selected', true);
+	AJS.$("#dply-issue-type option[value!='"+issueType+"']").remove();
 	
 	setDplyTrgtStatus(issueType);
 	AJS.$('#dply-trgt').val(trgt+"*"+trgtStepId).prop('selected', true);
@@ -389,7 +435,7 @@ function fn_setValueDialog(data){
 	setSuccessFailStatus(concatProgress);
 	AJS.$('#dply-success').val(success).prop('selected', true);
 	AJS.$('#dply-fail').val(fail).prop('selected', true);
-*/
+
 }
 
 
