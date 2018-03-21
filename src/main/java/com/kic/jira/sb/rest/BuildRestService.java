@@ -129,7 +129,7 @@ public class BuildRestService {
         int respCode = response.getStatusLine().getStatusCode();        
         System.out.println("statuscode : " + respCode);
         String responseBody = EntityUtils.toString(response.getEntity());
-        if (respCode / 100 != 2) {//200 번대가 아니면 오류
+        if (respCode / 100 != 2) {//200 번대가 아니면 오류 처리
         	rtnMap.put("result", "fail");        	
         	rtnMap.put("message", "ResponseCode : " + respCode + " [" + responseBody + "]");
         	return rtnMap;
