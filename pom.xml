@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+ 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -7,14 +7,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.kic.jira</groupId>
     <artifactId>sb-plugin</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 
     <organization>
         <name>kicco</name>
         <url>http://www.kicco.com/</url>
     </organization>
 
-    <name>SmartBuilder For JIRA</name>
+    <name>SmartBuilder For JIRA(lite)</name>
     <description>This is the com.kic.jira:sb-plugin plugin for Atlassian JIRA.</description>
     <packaging>atlassian-plugin</packaging>
 
