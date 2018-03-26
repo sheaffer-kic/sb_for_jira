@@ -29,6 +29,8 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueInputParameters;
 import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.MutableIssue;
+import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -120,7 +122,25 @@ public class BuildRestService {
     	
     	//SmartBuilder config 정보 가져오기..
     	SbConfigVo sbConfigVo = sbConfigService.getSelectSbConfig();
-    	rtnMap.put("cfId", sbConfigVo.getSbCfId());
+    	String cfId = sbConfigVo.getSbCfId();
+    	if (cfId == null) {
+    		rtnMap.put("result", "warn");
+    		rtnMap.put("message", "You should set SmartBuild config !!!");
+    		return rtnMap;
+    	}
+    	
+    	//more filtering (2018.03.26)
+/*    	CustomField cfForSb = customFieldManager.getCustomFieldObject(cfId);
+    	System.out.println("ddd : " +cfForSb.isAllProjects());
+    	List<Project> projListForSb = cfForSb.getAssociatedProjectObjects();
+
+    	if (projListForSb.size() == 0) {
+    		rtnMap.put("result", "warn");
+    		rtnMap.put("message", "You should set SmartBuild Project into Issues !!!");
+    		return rtnMap;
+    	}*/
+    	
+    	rtnMap.put("cfId", cfId);
     	
         Map<String, Object> httpMap = new HashMap<String, Object>();  
         httpMap.put("jobUrl", sbConfigVo.getUrl());
@@ -142,6 +162,8 @@ public class BuildRestService {
                         List.class, SbProjectVo.class));
         
         rtnMap.put("sbList", list);
+    	
+    	//System.out.println("############### cfId : " + sbConfigVo.getSbCfId());
     	return rtnMap;		
 	}
 	

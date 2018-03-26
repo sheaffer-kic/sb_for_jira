@@ -20,6 +20,7 @@ var SB_INCLUDER = {
     		contentType: 'application/json',
             dataType: 'json',
 			success: function(data, textStatus, response) {
+				console.log("result : " + JSON.stringify(data));
 				if (data.result == "ok") {
 					var cf = data.cfId;					
 					$("#" + cf).auiSelect2({
@@ -62,6 +63,7 @@ var SB_INCLUDER = {
 		}
 		
 		actionId = SB_INCLUDER._cacheBuild[issueId] ;
+		console.log(">> actionID : " + actionId);
 		if (actionId != "") {
 			SB_INCLUDER.sb_build_execute(actionId, issueId, $contextObject );
 		}
