@@ -469,35 +469,34 @@ function fn_setViewData(data){
 
 //삭제
 function fn_delete(id) {
-	//if (confirm("삭제 하시겠습니까?")) {
+
 		
-		// JSON형식으로 변환 할 오브젝트
-		var obj = new Object();
+	// JSON형식으로 변환 할 오브젝트
+	var obj = new Object();
+	
+	// form의 값을 오브젝트에 저장
+	obj.id = id;
+	
+	var url = contextPath + "/secure/SbIntegrationConfig!delete.jspa";
+	
+	AJS.$.ajax({
+		type: 'POST',		
+		url: url,
+		data: JSON.stringify(obj),
+		//dataType: "json",
+        contentType: "application/json; charset=utf-8",	
+        async: false,
+		success: function(data, textStatus, response) {
+			AJS.messages.success("#aui-message-bar", {
+			    title: 'Success!',
+			    body: '<p> Delete SmartBuild Integration Configuration</p>'
+			});
+			location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
+		},
+		error :function(response, textStatus, errorThrown) {
+			console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+		}				
+	});	
 		
-		// form의 값을 오브젝트에 저장
-		obj.id = id;
-		
-		var url = contextPath + "/secure/SbIntegrationConfig!delete.jspa";
-		
-		AJS.$.ajax({
-			type: 'POST',		
-			url: url,
-			data: JSON.stringify(obj),
-			//dataType: "json",
-	        contentType: "application/json; charset=utf-8",	
-	        async: false,
-			success: function(data, textStatus, response) {
-				AJS.messages.success("#aui-message-bar", {
-				    title: 'Success!',
-				    body: '<p> Delete SmartBuild Integration Configuration</p>'
-				});
-				location.href= contextPath + "/secure/SbIntegrationConfig!default.jspa?projectKey=" + projKey;
-			},
-			error :function(response, textStatus, errorThrown) {
-				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
-			}				
-		});	
-		
-		
-	//}
+
 }

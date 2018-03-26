@@ -25,10 +25,10 @@
 	<thead>
 	  <tr>
 	    <th>Issue type</th>
-	    <th>빌드대상 이슈상태</th>
-	    <th>빌드 수행 액션</th>
-	    <th>빌드성공 수행 시 수행할 액션</th>
-	    <th>빌드실패 수행 시 수행할 액션</th>
+	    <th>Issue status of build target</th><!--빌드대상 이슈상태-->
+	    <th>Issue status during build</th><!--빌드 중 이슈상태-->
+	    <th>Action to take when the build succeeds</th><!--빌드성공 수행 시 수행할 액션-->
+	    <th>Action to take when a build fails</th><!--빌드실패 수행 시 수행할 액션-->
 	    <th>&nbsp;&nbsp;&nbsp;<span class="aui-icon aui-icon-small aui-iconfont-configure"></span></th>
 	  </tr>
 	</thead>
@@ -82,28 +82,28 @@
 		    
 			<!-- 빌드대상 이슈상태 -->		    		    
     		<div class="field-group">    
-    			<label for="url">빌드대상 이슈상태<span class="aui-icon icon-required">required</span></label>
+    			<label for="url">Issue status of build target<span class="aui-icon icon-required">required</span></label>
     			<select class="select" id="dply-trgt" name="dply-trgt" onChange="javascript:setDplyProgressFirst(this.value)">
 			    </select>  <span id="span-trgt"></span>
 		    </div>
 		    
-		    <!--빌드 수행 액션 -->
+		    <!--빌드 중 이슈상태 -->
     		<div class="field-group">    
-    			<label for="url">빌드 중 이슈상태<span class="aui-icon icon-required">required</span></label>
+    			<label for="url">Issue status during build<span class="aui-icon icon-required">required</span></label>
     			<select class="select" id="dply-progress" name="dply-progress" onChange="javascript:setSuccessFailStatus(this.value)">
 			    </select>
 		    </div>		    
 		    
 		    <!--빌드성공 수행 시 수행할 액션 -->
     		<div class="field-group">    
-    			<label for="url">빌드성공 수행 시 수행할 액션<span class="aui-icon icon-required">required</span></label>
+    			<label for="url">Action to take when the build succeeds<span class="aui-icon icon-required">required</span></label>
     			<select class="select" id="dply-success" name="dply-success">				 
 			    </select> <span id="span-success"></span>
 		    </div>
 		    		    
 			<!--빌드실패 수행 시 수행할 액션 -->
     		<div class="field-group">    
-    			<label for="url">빌드실패 수행 시 수행할 액션<span class="aui-icon icon-required">required</span></label>
+    			<label for="url">Action to take when a build fails<span class="aui-icon icon-required">required</span></label>
     			<select class="select" id="dply-fail" name="dply-fail">
 			    </select> <span id="span-fail"></span>
 		    </div>
