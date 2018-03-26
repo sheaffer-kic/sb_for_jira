@@ -30,11 +30,11 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
 	}
 	
 	@Override
-	public List<SbInteConfig> listSbIntegrationConfig() throws Exception{
+	public List<SbInteConfig> listSbIntegrationConfig(String projectKey) throws Exception{
 		
 		Query streamQ = Query.select("ID, PROJECT_KEY, ISSUE_TYPE, ISSUE_TYPE_NAME, BUILD_TARGET_ID, BUILD_TARGET_NAME, "
 				+ "BUILD_STEP_ID, BUILD_PROGRESS_ID, BUILD_PROGRESS_NAME, BUILD_PROGRESS_ACTION, "
-				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME");
+				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME").where("PROJECT_KEY = ?", projectKey);
 
 		final List<SbInteConfig> rtnList = new ArrayList<SbInteConfig>();
 		

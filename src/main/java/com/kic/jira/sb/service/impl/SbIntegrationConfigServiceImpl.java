@@ -33,8 +33,8 @@ public class SbIntegrationConfigServiceImpl implements SbIntegrationConfigServic
 	}
 
 	@Override
-	public List<SbInteConfig> getListSbIntegrationConfig() throws Exception{
-		return sbIntegrationConfigDAO.listSbIntegrationConfig();
+	public List<SbInteConfig> getListSbIntegrationConfig(String projectKey) throws Exception{
+		return sbIntegrationConfigDAO.listSbIntegrationConfig(projectKey);
 	}	
 
 	//smart builder에서 호출하여사용함

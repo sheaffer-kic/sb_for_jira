@@ -47,7 +47,7 @@ public class SbIntegrationConifgWebWork extends JiraWebActionSupport {
 		System.out.println("sbproject config de default");
 		try {
 
-			sbInteConfigList = sbIntegrationConfigService.getListSbIntegrationConfig();
+			sbInteConfigList = sbIntegrationConfigService.getListSbIntegrationConfig(projectKey);
 			System.out.println("## sbInteConfigListsize : ====>" + sbInteConfigList.size());
 			
 		} catch (Exception e) {
