@@ -3,8 +3,10 @@
         <title>SmartBuilder</title>
         <meta name="decorator" content="atl.admin" />        		
 		$webResourceManager.requireResourcesForContext("sb-config-plugin")
+		$webResourceManager.requireResource("com.kic.jira.sb-plugin:wr-sb-config-soy-template" )
+
     </head>
     <body>
- 		#parse("templates/admin/sb-config-content.vm")
+ 		<div id="tbody"></div>
     </body>
 </html>

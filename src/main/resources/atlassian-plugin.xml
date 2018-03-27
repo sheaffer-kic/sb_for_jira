@@ -21,9 +21,20 @@
 		<dependency>${atlassian.plugin.key}:common-resources</dependency>
 		
         <resource type="download" name="sb-config.css" location="/css/sb-config.css"/>
-        <resource type="download" name="sb-config.js" location="/js/sb-config.js"/>             
+        <resource type="download" name="sb-config.js" location="/js/sb-config.js"/>  
+        <!-- <resource type="download" name="sb-config.soy.js" location="/templates/admin/sb-config.soy"/>      -->      
         <context>sb-config-plugin</context>
     </web-resource>
+    
+    
+	<web-resource key="wr-sb-config-soy-template">
+		<dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
+		<transformation extension="soy">
+			<transformer key="soyTransformer"/>
+		</transformation>
+		<resource type="download" name="sb-config.soy.js" location="/templates/admin/sb-config.soy"/>
+	</web-resource>
+    
     
     <!-- issue>right menu -->
     <web-resource key="wr-build-result-resources" name="wr-build-result-resources">
@@ -149,6 +160,9 @@
 	<!--  project config area. -->  	      		  	
 	<web-section key="ws-sb-integration-config" name="ws-sb-integration-config" location="atl.jira.proj.config" weight="150">
 		<description>Setting SmartBuilder Project</description>
+<!-- 		<condition class="com.atlassian.jira.plugin.webfragment.conditions.JiraGlobalPermissionCondition">
+			<param name="permission">admin</param>
+		</condition> -->	
 	</web-section>   	
 	
 	<web-item key="wi-sb-integration-config" name="wi-sb-integration-config" section="atl.jira.proj.config/ws-sb-integration-config" 

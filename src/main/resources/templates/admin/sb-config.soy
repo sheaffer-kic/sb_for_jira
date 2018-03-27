@@ -1,36 +1,44 @@
-<section class="aui-page-panel-content">
+{namespace kic.sb.config}
+
+
+/**
+ * description
+ * @param sbConfigContent
+ */
+{template .form}
+
 	<h2 class="custom-apps-title formtitle">Smart Builder Configuration</h2>
 	
 	<!--<div id="aui-message-bar"></div> -->
 	
 	<form id="sb-submit-form" name="sb-submit-form" class="aui" method="post">		
-		<input type="hidden" name="id" id="id" value="$sbConfigContent.ID">
+		<input type="text" name="id" id="id" value="{$sbConfigContent.ID}">
 		<div class="field-group">
 	        <label for="sbId">SmartBuilder ID<span class="aui-icon icon-required">required</span></label>
-	        <input id="sbId" name="sbId" class="text" type="text" value="$sbConfigContent.sbId" data-aui-validation-field required="required"/ >
+	        <input id="sbId" name="sbId" class="text" type="text" value="{$sbConfigContent.sbId}" data-aui-validation-field required="required"/ >
 		</div>		
 		<div class="field-group">
 	        <label for="sbPassword">SmartBuilder Password<span class="aui-icon icon-required">required</span></label>
-	        <input type="password" class="password" id="sbPassword" name="sbPassword" value="$sbConfigContent.sbPassword" data-aui-validation-field required="required" />
+	        <input type="password" class="password" id="sbPassword" name="sbPassword" value="{$sbConfigContent.sbPassword}" data-aui-validation-field required="required" />
 		</div>
 		<div class="field-group">
 	        <label for="URL">SmartBuilder URL<span class="aui-icon icon-required">required</span></label>
-	        <input class="text long-field" type="text" id="url" name="url" value="$sbConfigContent.url" data-aui-validation-field required="required" />
+	        <input class="text long-field" type="text" id="url" name="url" value="{$sbConfigContent.url}" data-aui-validation-field required="required" />
 	        <div  id="error_msg" class="error"></div>
 		</div>	
 		<div class="field-group">
 	        <label for="cfId">CustomFiled For Build Project<span class="aui-icon icon-required">required</span></label>
         	<input id="cfName" name="cfName" class="text" type="text" value= "" data-aui-validation-field required="required" />
-			<input id="cfId" name="cfId" type="hidden" value="$sbConfigContent.sbCfId" />
+			<input id="cfId" name="cfId" type="hidden" value="{$sbConfigContent.sbCfId}" />
 		</div>
 		
 		<div class="field-group">
 	        <label for="jiraId">Jira ID<span class="aui-icon icon-required">required</span></label>
-	        <input id="jiraId" name="jiraId" class="text" type="text" value="$sbConfigContent.jiraId" data-aui-validation-field required="required"/ >
+	        <input id="jiraId" name="jiraId" class="text" type="text" value="{$sbConfigContent.jiraId}" data-aui-validation-field required="required"/ >
 		</div>		
 		<div class="field-group">
 	        <label for="jiraPassword">Jira Password<span class="aui-icon icon-required">required</span></label>
-	        <input type="password" class="password" id="jiraPassword" name="jiraPassword" value="$sbConfigContent.jiraPassword" data-aui-validation-field required="required" />
+	        <input type="password" class="password" id="jiraPassword" name="jiraPassword" value="{$sbConfigContent.jiraPassword}" data-aui-validation-field required="required" />
 		</div>		
 				
 	    <div class="buttons-container">
@@ -43,8 +51,5 @@
 		    </div>
 	    </div>
 	</form>
-</section>
 
-<script>
-	SB_CONFIG.sb_project('$sbConfigContent.sbCfName');
-</script>
+{/template}

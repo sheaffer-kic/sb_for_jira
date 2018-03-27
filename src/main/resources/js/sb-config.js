@@ -75,7 +75,6 @@ var SB_CONFIG = {
 				    body: '<p> Update Smart Builder Configuration</p>'
 				});	*/
 				
-				//location.href= contextPath + "/secure/admin/SbConfig!default.jspa";
 				location.reload();			
 			},
 			error :function(response, textStatus, errorThrown) {
@@ -107,7 +106,6 @@ var SB_CONFIG = {
 				    title: 'Success!',
 				    body: '<p> Save Smart Builder Configuration</p>'
 				});	*/
-				//location.href= contextPath + "/secure/admin/SbConfig!default.jspa";
 				location.reload();
 			},
 			error :function(response, textStatus, errorThrown) {
@@ -121,7 +119,6 @@ var SB_CONFIG = {
 		obj.id = id;			
 		var sendData = "sendData="+JSON.stringify(obj);
 
-		//console.log("======JSON  new Object(); sendData=====>"+sendData);	
 		var url = contextPath + "/secure/admin/SbConfig!delete.jspa";
 		
 		AJS.$.ajax({
@@ -140,23 +137,53 @@ var SB_CONFIG = {
 			}				
 		});	
 	}
+	
+	,
+	fn_init: function () {
+		var url = contextPath + "/rest/sb/1.0/config/info";
+		$.ajax({
+			type: 'GET',		
+			url: url,
+			success: function(data, textStatus, response) {
+				var obj = new Object();
+				obj.sbConfigContent = data;
+				$('#tbody').html(kic.sb.config.form(obj, ''));
+				//location.reload();
+				
+				SB_CONFIG.sb_project(data.sbCfName);
+				
+				SB_CONFIG.fn_setEvent();
+			},
+			error :function(response, textStatus, errorThrown) {
+				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+			}				
+		});
+		
+	}
+	
+	,
+	fn_setEvent: function() {
+		AJS.$("#delete-sb-submit-button").click(function(e) {
+			var id = AJS.$('#id').val();
+			SB_CONFIG.fn_delete(id);
+		});	
+		
+		AJS.$('#sb-submit-form').on('aui-valid-submit', function(event) {
+		    event.preventDefault();
+			var id = AJS.$('#id').val();		
+			if(id==0){
+				SB_CONFIG.fn_insert();	
+			}else{
+				SB_CONFIG.fn_update(id);
+			}	    
+		});
+	}
 };
 
-AJS.toInit(function(){
-	var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
-	AJS.$("#delete-sb-submit-button").click(function(e) {
-		var id = AJS.$('#id').val();
-		SB_CONFIG.fn_delete(id);
-	});	
-	
-	AJS.$('#sb-submit-form').on('aui-valid-submit', function(event) {
-	    event.preventDefault();
-		var id = AJS.$('#id').val();		
-		if(id==0){
-			SB_CONFIG.fn_insert();	
-		}else{
-			SB_CONFIG.fn_update(id);
-		}	    
+(function ($) {
+	AJS.toInit(function(){
+		var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
+		SB_CONFIG.fn_init();
 	});
-});
+})(AJS.$);
 
