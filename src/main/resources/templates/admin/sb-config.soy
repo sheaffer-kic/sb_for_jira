@@ -12,7 +12,7 @@
 	<!--<div id="aui-message-bar"></div> -->
 	
 	<form id="sb-submit-form" name="sb-submit-form" class="aui" method="post">		
-		<input type="text" name="id" id="id" value="{$sbConfigContent.ID}">
+		<input type="hidden" name="id" id="id" value="{$sbConfigContent.ID}">
 		<div class="field-group">
 	        <label for="sbId">SmartBuilder ID<span class="aui-icon icon-required">required</span></label>
 	        <input id="sbId" name="sbId" class="text" type="text" value="{$sbConfigContent.sbId}" data-aui-validation-field required="required"/ >
