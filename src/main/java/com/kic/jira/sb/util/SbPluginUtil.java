@@ -1,6 +1,6 @@
 package com.kic.jira.sb.util;
 
-import java.io.BufferedReader;
+import java.io.BufferedReader; 
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Map;
@@ -82,8 +82,7 @@ public class SbPluginUtil {
 		HttpClientContext localContext = HttpClientContext.create();		
     	HttpGet getMethod = new HttpGet(uri);
 	    //postMethod.setEntity(new ByteArrayEntity(json.toString().getBytes(), ContentType.APPLICATION_JSON));	
-	    //HttpResponse response = httpClient.execute(host, postMethod, localContext);
-    	HttpResponse response = httpClient.execute(host, getMethod, (HttpContext) localContext);
+	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
 
 			
 		return response;
@@ -132,8 +131,8 @@ public class SbPluginUtil {
 		//postMethod.setHeader("Content-Type","application/json;charset=utf-8");
 	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));		
 
-	    //HttpResponse response = httpClient.execute(host, postMethod, localContext);
-	    HttpResponse response = httpClient.execute(host, postMethod, (HttpContext) localContext);
+	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
+
 			
 		return response;
 	}	
