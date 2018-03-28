@@ -1,4 +1,3 @@
-
 #foreach($list in $sbList)
 	#foreach($log in $list)
 		#if($log.projResult.indexOf("2") > 0)
