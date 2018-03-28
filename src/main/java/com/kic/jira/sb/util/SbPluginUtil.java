@@ -1,6 +1,6 @@
 package com.kic.jira.sb.util;
 
-import java.io.BufferedReader; 
+import java.io.BufferedReader;
 import java.net.URI;
 import java.security.cert.X509Certificate;
 import java.util.Map;
@@ -22,7 +22,6 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,8 +81,7 @@ public class SbPluginUtil {
 		HttpClientContext localContext = HttpClientContext.create();		
     	HttpGet getMethod = new HttpGet(uri);
 	    //postMethod.setEntity(new ByteArrayEntity(json.toString().getBytes(), ContentType.APPLICATION_JSON));	
-	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
-
+	    HttpResponse response = httpClient.execute(host, getMethod, localContext);
 			
 		return response;
 	}
@@ -132,7 +130,6 @@ public class SbPluginUtil {
 	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));		
 
 	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
-
 			
 		return response;
 	}	
