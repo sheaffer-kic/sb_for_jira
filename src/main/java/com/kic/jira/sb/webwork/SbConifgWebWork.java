@@ -2,6 +2,7 @@ package com.kic.jira.sb.webwork;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,25 +46,15 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 		
 		try {
 			String receiveData = SbPluginUtil.getRequestJsonData(request);
-			JSONObject jsonObj = new JSONObject(receiveData.trim());
-
-			String sbId = jsonObj.getString("sbId");
-			String sbPassword = jsonObj.getString("sbPassword");
-			String url = jsonObj.getString("url");
-			String cfName = jsonObj.getString("cfName");
-			String cfId = customFieldManager
-								.getCustomFieldObject(jsonObj.getString("cfId"))
-								.getId(); //customfield_1xxxx
-
-			SbConfigVo sbConfigVo = new SbConfigVo();
-			sbConfigVo.setSbId(sbId);
-			sbConfigVo.setSbPassword(sbPassword);
-			sbConfigVo.setUrl(url);			
-			sbConfigVo.setSbCfName(cfName);
-			sbConfigVo.setSbCfId(cfId);
-			sbConfigVo.setJiraId(jsonObj.getString("jiraId"));
-			sbConfigVo.setJiraPassword(jsonObj.getString("jiraPassword"));		
+			JSONObject jsonObj = new JSONObject(receiveData.trim());			
+			ObjectMapper mapper = new ObjectMapper();
 			
+			SbConfigVo sbConfigVo = mapper.readValue(jsonObj.toString(), SbConfigVo.class);
+			String cfId = customFieldManager
+					.getCustomFieldObject(jsonObj.getString("sbCfId"))
+					.getId();			
+			sbConfigVo.setSbCfId(cfId);
+
 			sbConfigService.setInsertSbConfig(sbConfigVo);	
 
 		} catch (Exception e) {
@@ -77,37 +68,23 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 		try {
 			String receiveData = SbPluginUtil.getRequestJsonData(request);
 			JSONObject jsonObj = new JSONObject(receiveData.trim());
+			ObjectMapper mapper = new ObjectMapper();
 			
-			System.out.println("jsoObje : " + jsonObj.toString());
-			
-			String sbId = jsonObj.getString("sbId");
-			String sbPassword = jsonObj.getString("sbPassword");
-			String url = jsonObj.getString("url");
-			String cfName = jsonObj.getString("cfName");
+			SbConfigVo sbConfigVo = mapper.readValue(jsonObj.toString(), SbConfigVo.class);
 			String cfId = customFieldManager
-								.getCustomFieldObject(jsonObj.getString("cfId"))
-								.getId();
-			int id = Integer.parseInt(jsonObj.getString("id"));
-			
-			SbConfigVo sbConfigVo = new SbConfigVo();
-			sbConfigVo.setSbId(sbId);
-			sbConfigVo.setSbPassword(sbPassword);
-			sbConfigVo.setUrl(url);	
-			sbConfigVo.setSbCfName(cfName);
+					.getCustomFieldObject(jsonObj.getString("sbCfId"))
+					.getId();			
 			sbConfigVo.setSbCfId(cfId);
-			sbConfigVo.setJiraId(jsonObj.getString("jiraId"));
-			sbConfigVo.setJiraPassword(jsonObj.getString("jiraPassword"));			
-
+			int id = jsonObj.getInt("id");
+			
 			sbConfigService.setUpdateSbConfig(sbConfigVo, id);
 			
 		} catch (Exception e) {
-			//System.out.println("error : " + e.getMessage());
 			logger.debug(e.getMessage());
 		}		
 	}
 	
 	public void doDelete() {
-		//System.out.println("doDelete()==========================>1");	
 		HttpServletRequest request = ServletActionContext.getRequest();		
 		try {
 			

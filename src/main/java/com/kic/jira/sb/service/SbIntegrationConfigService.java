@@ -1,7 +1,6 @@
 package com.kic.jira.sb.service;
 
 import java.util.List;
-
 import com.kic.jira.sb.ao.SbInteConfig;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 

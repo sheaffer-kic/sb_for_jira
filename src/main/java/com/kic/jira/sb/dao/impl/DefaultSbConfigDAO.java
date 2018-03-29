@@ -54,27 +54,12 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
         		//sbConfigVo.setModifyDate(t.getModifyDate());
             }
 		});
-		
-		/*
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====> ao.count() : "+ao.count(SbConfig.class));
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====>ao.getID(): "+sbConfigVo.getID());
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====>sbConfigVo.getSbId(): "+sbConfigVo.getSbId());
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====>sbConfigVo.getSbPassword(): "+sbConfigVo.getSbPassword());
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====>sbConfigVo.getUrl(): "+sbConfigVo.getUrl());
-		System.out.println("DefaultSbConfigDAO : selectSbConfig()=====>sbConfigVo.getRegDate(): "+sbConfigVo.getRegDate());
-		*/
-		
 		return sbConfigVo;		
 	};
 	
 	@Override
 	public SbConfig insertSbConfig(SbConfigVo sbConfigVo) throws Exception{
-		//System.out.println("DefaultSbConfigDAO : insertSbConfig()=====> 1");		
-		
 		SbConfig sbConfigAo = ao.create(SbConfig.class);
-		
-		//System.out.println("DefaultSbConfigDAO : insertSbConfig()=====>sbConfigVo.getSbId(): "+sbConfigVo.getSbId());		
-
 		sbConfigAo.setSbId(sbConfigVo.getSbId());
 		sbConfigAo.setSbPassword(sbConfigVo.getSbPassword());
 		sbConfigAo.setUrl(sbConfigVo.getUrl());		
@@ -85,11 +70,6 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 		sbConfigAo.setRegDate(new Date());	
 		
 		sbConfigAo.save();
-		//System.out.println("DefaultSbConfigDAO : insertSbConfig()=====> 2");		
-		
-		//System.out.println("DefaultSbConfigDAO : insertSbConfig()=====> sbConfigAo.getSbId()"+sbConfigAo.getSbId());
-		
-		
 		return sbConfigAo;		
 		
 	};
@@ -97,16 +77,7 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 	
 	@Override
 	public SbConfig updateSbConfig(SbConfigVo sbConfigVo, int id) throws Exception{
-		//System.out.println("DefaultSbConfigDAO : updateSbConfig()=====> 1");
-		
 		SbConfig sbConfigAo = ao.get(SbConfig.class, id);
-		
-		/*
-		System.out.println("DefaultSbConfigDAO : updateSbConfig()=====>sbConfigVo.getID(): "+sbConfigVo.getID());
-		System.out.println("DefaultSbConfigDAO : updateSbConfig()=====>sbConfigVo.getSbId(): "+sbConfigVo.getSbId());
-		System.out.println("DefaultSbConfigDAO : updateSbConfig()=====>sbConfigVo.getSbPassword(): "+sbConfigVo.getSbPassword());
-		System.out.println("DefaultSbConfigDAO : updateSbConfig()=====>sbConfigVo.getUrl(): "+sbConfigVo.getUrl());		
-		*/
 		
 		sbConfigAo.setSbId(sbConfigVo.getSbId());
 		sbConfigAo.setSbPassword(sbConfigVo.getSbPassword());
@@ -118,8 +89,7 @@ public class DefaultSbConfigDAO implements SbConfigDAO{
 		sbConfigAo.setModifyDate(new Date());
 		
 		sbConfigAo.save();		
-		//System.out.println("DefaultSbConfigDAO : updateSbConfig()=====> ao.count() : "+ao.count(SbConfig.class));
-		
+
 		return sbConfigAo;			
 	};
 	

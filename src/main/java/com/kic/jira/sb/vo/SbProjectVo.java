@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class SbProjectVo implements Serializable {
 	private static final long serialVersionUID = -6212517597584054950L;
 	
@@ -24,5 +27,10 @@ public class SbProjectVo implements Serializable {
 	}
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

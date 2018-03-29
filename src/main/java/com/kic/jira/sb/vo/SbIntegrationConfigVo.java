@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlElement;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 public class SbIntegrationConfigVo implements Serializable {
 	private static final long serialVersionUID = -7830516092464822807L;
 
@@ -139,5 +142,10 @@ public class SbIntegrationConfigVo implements Serializable {
 	}
 	public void setBuildFailName(String buildFailName) {
 		this.buildFailName = buildFailName;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

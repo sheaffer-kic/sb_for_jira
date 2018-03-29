@@ -29,8 +29,6 @@ import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.IssueInputParameters;
 import com.atlassian.jira.issue.IssueManager;
 import com.atlassian.jira.issue.MutableIssue;
-import com.atlassian.jira.issue.fields.CustomField;
-import com.atlassian.jira.issue.issuetype.IssueType;
 import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.jira.user.ApplicationUser;
@@ -162,8 +160,6 @@ public class BuildRestService {
                         List.class, SbProjectVo.class));
         
         rtnMap.put("sbList", list);
-    	
-    	//System.out.println("############### cfId : " + sbConfigVo.getSbCfId());
     	return rtnMap;		
 	}
 	
@@ -179,8 +175,6 @@ public class BuildRestService {
 		
 		Issue issue = issueManager.getIssueObject(issueId);		
 		Project project = issue.getProjectObject();
-		
-		System.out.println("projectKey : " + project.getKey() + ", getIssueTypeId : " + issue.getIssueTypeId());
 		
     	//software 유형이 아닌경우는 수행 하지 않음.
     	if(!project.getProjectTypeKey().getKey().equals(PROJECT_TYPE_SW))  {
@@ -226,8 +220,6 @@ public class BuildRestService {
 		jsonSend.put("jiraId", sbConfigVo.getJiraId());
 		jsonSend.put("jiraPassword", sbConfigVo.getJiraPassword());		
 		
-		//logger.debug("build sendDATa : " + jsonSend.toString())	;
-		
 		Map<String, Object> httpMap = new HashMap<String, Object>();
 		httpMap.put("jobUrl", sbConfigVo.getUrl());
 		httpMap.put("sendData", jsonSend);
@@ -248,8 +240,6 @@ public class BuildRestService {
         JSONObject jsonResult = new JSONObject(responseBody);
         rtnMap.put("result", jsonResult.getString("result")) ;
         rtnMap.put("message", jsonResult.getString("message"));
-        //rtnMap.put("projectKey", project.getKey());
-        //rtnMap.put("issueType", issue.getIssueTypeId());
         rtnMap.put("issueKey", issue.getKey());
         
         logger.debug("Build Result :: " + jsonResult.toString());
@@ -270,26 +260,15 @@ public class BuildRestService {
 		JSONObject jsonObj = new JSONObject(param);
 		Issue issue = issueManager.getIssueObject(jsonObj.getString("issueKey"));
 		Project project = issue.getProjectObject();		
-		//System.out.println("issue : " + issue.getSummary() + ", issueType : " + issue.getIssueTypeId());
 		
 		SbIntegrationConfigVo sbVo = sbInteConfigService.getSelectSbIntegrationConfig(project.getKey(), issue.getIssueTypeId());
-		System.out.println("#### update result : " + sbVo.toString());
-		System.out.println("build ING action : " + sbVo.getBuildProgressAction());
-		System.out.println("build Success action : " + sbVo.getBuildSuccessId());
-		System.out.println("build Fail action : " + sbVo.getBuildFailId());
 		sbVo.getBuildProgressAction(); //이 액션을 수행 해야 함.
 		
-		String flag = jsonObj.getString("flag");
-		
-		System.out.println("\n\n");
-		System.out.println("flag ::: " + flag);
-		
+		String flag = jsonObj.getString("flag");		
 		int actionId = -1;
 		if (flag.equals(BUILD_STATUS_ING)) actionId = sbVo.getBuildProgressAction();  //빌드중
 		else if (flag.equals(BUILD_STATUS_SUCCESS))actionId = sbVo.getBuildSuccessId(); //빌드성공
 		else if (flag.equals(BUILD_STATUS_FAIL)) actionId = sbVo.getBuildFailId(); //빌드실패
-		
-		System.out.println("actionId ::: " + actionId);
 		
 		ApplicationUser user = jiraUserManager.getUserByName(userManager.getRemoteUser().getUsername());
 		String issueKey = jsonObj.getString("issueKey");
@@ -314,50 +293,5 @@ public class BuildRestService {
 			//rtnMap.put("i18nResolver.getText(TRANSITION_IMPOSSIBLE));
 		}
 		return rtnMap;
-	}		
-	
-	
-/*	
-	String url = "http://localhost:58080/sb.view"; 
-	//String url = "https://kmd.kicco.com/sb.view";  //ssl  => 검토해야 함
-	//String url = "http://118.36.229.198:9000/sb.view";
-	String restPath = "/rest/project/external/build"; 
-	
-	
-	HttpClient client = HttpClientBuilder.create().build();
-	
-	HttpPost HttpPost = new HttpPost(url + restPath);
-
-	JSONObject json = new JSONObject();
-	
-	try {
-
-		//json.put("tagName", "TEST-1");
-		json.put("projectName", "프로젝트 01");
-		json.put("userId", "root");
-		json.put("password", "root");		
-		json.put("issueId", "TEST-2");
-		
-		System.out.println("json: " + json.toString());
-		//ContentType.APPLICATION_JSON
-		
-		HttpPost.setEntity(new ByteArrayEntity(json.toString().getBytes(), ContentType.APPLICATION_JSON));
-		
-		HttpResponse response = client.execute(HttpPost);			
-		StatusLine statusLine = response.getStatusLine();
-		int statusCode = statusLine.getStatusCode();
-		
-		System.out.println("statusCode ; " + statusCode);
-		String responseBody = EntityUtils.toString(response.getEntity());
-		
-		System.out.println(">>>responsbody : " + responseBody);
-		
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		//e.printStackTrace();
-		System.out.println("### error : " + e.getMessage() + ", " + e.getClass());
-		
-	}
-	
-	*/
+	}	
 }

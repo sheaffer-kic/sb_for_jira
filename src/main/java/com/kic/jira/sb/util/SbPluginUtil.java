@@ -108,7 +108,7 @@ public class SbPluginUtil {
 				return true;
 			}
        };
-       //try{
+       
        // Install the all-trusting trust manager
        SSLContext sslContext = SSLContext.getInstance("SSL");
        sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -116,25 +116,21 @@ public class SbPluginUtil {
        SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
 
 		URI uri = URI.create((String)httpMap.get("jobUrl") + restPath); //https://kmd.kicco.com/sb.view  + "/rest/project/list/for/external"
-		
-		//System.out.println("(String)httpMap.get(jobUrl) + restPath===>"+(String)httpMap.get("jobUrl") + restPath);
 		HttpHost host = new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
-	
+			
 		CloseableHttpClient httpClient = HttpClients.custom()
 	            .setSSLSocketFactory(sslsf)
 	            //.setDefaultCredentialsProvider(credsProvider)
 	            .build();
-	
+	        
+			
 		HttpClientContext localContext = HttpClientContext.create();		
 		HttpPost postMethod = new HttpPost(uri);
-
-		//System.out.println("httpMap.get(sendData).toString()===>"+httpMap.get("sendData").toString());
 		//postMethod.setHeader("Content-Type","application/json;charset=utf-8");
-		
-	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));	
+	    postMethod.setEntity(new ByteArrayEntity(httpMap.get("sendData").toString().getBytes(), ContentType.APPLICATION_JSON));		
 
 	    HttpResponse response = httpClient.execute(host, postMethod, localContext);
-
+			
 		return response;
 	}	
 	

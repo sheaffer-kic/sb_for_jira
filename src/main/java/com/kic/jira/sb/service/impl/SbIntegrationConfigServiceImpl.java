@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.atlassian.activeobjects.tx.Transactional;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import com.atlassian.sal.api.message.I18nResolver;
 import com.kic.jira.sb.ao.SbInteConfig;
 import com.kic.jira.sb.dao.SbIntegrationConfigDAO;
 import com.kic.jira.sb.service.SbIntegrationConfigService;
@@ -23,13 +21,10 @@ public class SbIntegrationConfigServiceImpl implements SbIntegrationConfigServic
 	private static final Logger logger = LoggerFactory.getLogger(SbIntegrationConfigServiceImpl.class);
 
 	private final SbIntegrationConfigDAO sbIntegrationConfigDAO;
-	private final I18nResolver i18nResolver;
 	
 	@Inject	
-	public SbIntegrationConfigServiceImpl(SbIntegrationConfigDAO sbIntegrationConfigDAO,
-			  @ComponentImport I18nResolver i18nResolver) {
-		this.sbIntegrationConfigDAO = sbIntegrationConfigDAO;
-		this.i18nResolver = i18nResolver;
+	public SbIntegrationConfigServiceImpl(SbIntegrationConfigDAO sbIntegrationConfigDAO) {
+		this.sbIntegrationConfigDAO = sbIntegrationConfigDAO;	
 	}
 
 	@Override

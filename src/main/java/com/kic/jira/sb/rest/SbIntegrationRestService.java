@@ -22,8 +22,6 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.workflow.JiraWorkflow;
 import com.atlassian.jira.workflow.WorkflowManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
-import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
-import com.atlassian.sal.api.message.I18nResolver;
 import com.kic.jira.sb.service.SbIntegrationConfigService;
 import com.kic.jira.sb.vo.ActionVo;
 import com.kic.jira.sb.vo.IssueStatusVo;
@@ -31,9 +29,6 @@ import com.kic.jira.sb.vo.IssueTypeVo;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 import com.opensymphony.workflow.loader.ActionDescriptor;
 import com.opensymphony.workflow.loader.StepDescriptor;
-
-
-
 
 @Scanned 
 @Path("integration")
@@ -47,23 +42,12 @@ public class SbIntegrationRestService {
 		this.sbIntegrationConfigService = sbIntegrationConfigService;
 	}	
 	
-	//http://xxx:prot/context/rest/sb/1.0/integration/test
-	@GET
-    @Path("/test")
-	@Produces({MediaType.APPLICATION_JSON})	
-	public Map<String, String> test() throws Exception {
-		Map<String, String> rtnMap = new HashMap<String, String>();
-		rtnMap.put("test", "test valeu");
-		rtnMap.put("aaa", "aaa.value");
-		
-		return rtnMap;
-	}
-
 	//http://localhost:2990/jira/rest/sb/1.0/integration/issueType/ST1
 	@GET
     @Path("/issueType/{projectKey}")
 	@Produces({MediaType.APPLICATION_JSON})		
     public List<IssueTypeVo> getProjectIssueTypeList(@PathParam("projectKey") String projectKey) throws Exception {
+		
         Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 
         if (project == null) {
@@ -73,8 +57,6 @@ public class SbIntegrationRestService {
         }
 
         List<IssueTypeVo> projIssueTypeList = new ArrayList<IssueTypeVo>();
-
-        // long projectId = project.getId();
         Collection<IssueType> issueTypes = project.getIssueTypes();
 
         for (IssueType it : issueTypes) {
@@ -90,11 +72,14 @@ public class SbIntegrationRestService {
 	@GET
     @Path("/status/{projectKey}/{issueTypeId}")
 	@Produces({MediaType.APPLICATION_JSON})		
-	public List<IssueStatusVo> getProjStatusOfIssueType(@PathParam("projectKey") String projectKey, @PathParam("issueTypeId") String issueTypeId) throws Exception {
+	public List<IssueStatusVo> getProjStatusOfIssueType(@PathParam("projectKey") String projectKey, 
+														@PathParam("issueTypeId") String issueTypeId) throws Exception {
+		
 		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  		
 		long projectId = project.getId();
-		JiraWorkflow jwf = workflowManager.getWorkflow(projectId, issueTypeId);		
+		JiraWorkflow jwf = workflowManager.getWorkflow(projectId, issueTypeId);
+		
 		List<Status> statusList = jwf.getLinkedStatusObjects();	
 		List<IssueStatusVo> issueTypeStatusList = new ArrayList<IssueStatusVo>();
 		
@@ -105,7 +90,7 @@ public class SbIntegrationRestService {
 			vo.setName(s.getName());
 			issueTypeStatusList.add(vo);
 		}
-		//return Response.ok(workTypeStatusList, MediaType.APPLICATION_JSON).build();		
+		
 		return issueTypeStatusList;
 	}	
 	
@@ -117,6 +102,7 @@ public class SbIntegrationRestService {
 	public List<IssueStatusVo> getNextStatusOfStep(@PathParam("projectKey") String projectKey, 
 													     @PathParam("issueTypeId") String issueTypeId,  
 													     @PathParam("stepId") int stepId) throws Exception {
+		
 		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  
 		
@@ -160,6 +146,7 @@ public class SbIntegrationRestService {
 	public List<ActionVo> getActionList(@PathParam("projectKey") String projectKey, 
 	                                    @PathParam("issueTypeId") String issueTypeId, 
 	                                    @PathParam("statusId") String statusId  ) throws Exception {
+		
 		Project project = ComponentAccessor.getProjectManager().getProjectObjByKey(projectKey);
 		WorkflowManager workflowManager = ComponentAccessor.getWorkflowManager();  
 		
@@ -183,7 +170,6 @@ public class SbIntegrationRestService {
 				break;
 			}
 		}
-		//return Response.ok(actionList, MediaType.APPLICATION_JSON).build();
 		
 		return actionList;
 	}	
@@ -193,6 +179,7 @@ public class SbIntegrationRestService {
     @Path("/select/{id}")
 	@Produces({MediaType.APPLICATION_JSON})			
     public SbIntegrationConfigVo getSelectSbIntegrationConfig(@PathParam("id") int id){
+		
 		SbIntegrationConfigVo sbIntegrationConfigVo = null;
 		try {
 			
@@ -201,6 +188,7 @@ public class SbIntegrationRestService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return sbIntegrationConfigVo;	
     }
 	
@@ -209,23 +197,11 @@ public class SbIntegrationRestService {
     @Path("/dupCheck/{projectKey}/{issueTypeId}")
 	@Produces({MediaType.APPLICATION_JSON})			
     public SbIntegrationConfigVo getSelectSbIntegrationConfig(@PathParam("projectKey") String projectKey, 
-            @PathParam("issueTypeId") String issueTypeId){
+            												  @PathParam("issueTypeId") String issueTypeId){
 		SbIntegrationConfigVo sbIntegrationConfigVo = null;
-		//String isDup = "N";
+
 		try {
 			sbIntegrationConfigVo = sbIntegrationConfigService.getSelectSbIntegrationConfig(projectKey, issueTypeId);	
-			
-			System.out.println("projectKey is ======>"+projectKey);
-			System.out.println("issueTypeId is ======>"+issueTypeId);
-			System.out.println("sbIntegrationConfigVo.getProjectKey()======>"+sbIntegrationConfigVo.getProjectKey());
-			System.out.println("sbIntegrationConfigVo.getIssueType()======>"+sbIntegrationConfigVo.getIssueType());
-			
-			
-			//if(sbIntegrationConfigVo.getProjectKey() != null && sbIntegrationConfigVo.getIssueType() != null){
-			//	isDup = "Y";
-			//}
-			
-			//System.out.println("sbIntegrationConfigVo is isDup======>"+isDup);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

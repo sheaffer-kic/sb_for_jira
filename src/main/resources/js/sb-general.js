@@ -139,9 +139,9 @@ var SB_INCLUDER = {
 		JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function (e, $context, reason) {
 			//Dashboard, Board 에서
 			if (reason == JIRA.CONTENT_ADDED_REASON.dialogReady) { 
-				if ($context.parent('#create-issue-dialog').length ||  $context.parent('#create-subtask-dialog').length || $context.parent('#prefillable-create-issue-dialog').length) {
+				if ($context.parent('#create-issue-dialog').length | $context.parent('#create-subtask-dialog').length || $context.parent('#prefillable-create-issue-dialog').length) {
 					//alert ("projectfield : " + $("#project-field").val());  SW-SCRUM01 (SWSCRUM01)  => SW-SCRUM01 이 프로젝트이름임..
-					var project = $("#project-field").val()
+					var project = $("#project-field").val();
 					SB_INCLUDER.sb_project(1, project.substring(0, project.indexOf("(")), $(document) );  //1:projectName, 2:issueId
 					return;
 				}                     
