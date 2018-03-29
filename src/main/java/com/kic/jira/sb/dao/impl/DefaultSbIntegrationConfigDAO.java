@@ -30,18 +30,34 @@ public class DefaultSbIntegrationConfigDAO implements SbIntegrationConfigDAO {
 	}
 	
 	@Override
-	public List<SbInteConfig> listSbIntegrationConfig(String projectKey) throws Exception{
+	public List<SbIntegrationConfigVo> listSbIntegrationConfig(String projectKey) throws Exception{
 		
 		Query streamQ = Query.select("ID, PROJECT_KEY, ISSUE_TYPE, ISSUE_TYPE_NAME, BUILD_TARGET_ID, BUILD_TARGET_NAME, "
 				+ "BUILD_STEP_ID, BUILD_PROGRESS_ID, BUILD_PROGRESS_NAME, BUILD_PROGRESS_ACTION, "
 				+ "BUILD_SUCCESS_ID, BUILD_SUCCESS_NAME, BUILD_FAIL_ID, BUILD_FAIL_NAME").where("PROJECT_KEY = ?", projectKey);
 
-		final List<SbInteConfig> rtnList = new ArrayList<SbInteConfig>();
+		final List<SbIntegrationConfigVo> rtnList = new ArrayList<SbIntegrationConfigVo>();
 		
 		ao.stream(SbInteConfig.class, streamQ, new EntityStreamCallback<SbInteConfig, Integer>() {		
             @Override
             public void onRowRead(SbInteConfig t) {
-            	rtnList.add(t);          	
+            	SbIntegrationConfigVo vo = new SbIntegrationConfigVo();
+            	vo.setID(t.getID());
+            	vo.setProjectKey(t.getProjectKey());
+            	vo.setIssueType(t.getIssueType());
+            	vo.setIssueTypeName(t.getIssueTypeName());
+            	vo.setBuildTargetId(t.getBuildTargetId());
+            	vo.setBuildTargetName(t.getBuildTargetName());
+            	vo.setBuildStepId(t.getBuildStepId());
+            	vo.setBuildProgressId(t.getBuildProgressId());
+            	vo.setBuildProgressName(t.getBuildProgressName());
+            	vo.setBuildProgressAction(t.getBuildProgressAction());
+            	vo.setBuildSuccessId(t.getBuildSuccessId());
+            	vo.setBuildSuccessName(t.getBuildSuccessName());
+            	vo.setBuildFailId(t.getBuildFailId());
+            	vo.setBuildFailName(t.getBuildFailName());
+            	//rtnList.add(t);
+            	rtnList.add(vo);
             }
 		});		
 		

@@ -6,7 +6,7 @@ import com.kic.jira.sb.ao.SbInteConfig;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 
 public interface SbIntegrationConfigDAO {
-	public List<SbInteConfig> listSbIntegrationConfig(String projectKey) throws Exception;
+	public List<SbIntegrationConfigVo> listSbIntegrationConfig(String projectKey) throws Exception;
 	public SbIntegrationConfigVo selectSbIntegrationConfig(String projectKey, String issueType) throws Exception;//smart builder에서 호출하여사용함
 	public SbIntegrationConfigVo selectSbIntegrationConfig(int id) throws Exception;
 	public SbInteConfig insertSbIntegrationConfig(SbIntegrationConfigVo sbIntegrationConfigVo) throws Exception;

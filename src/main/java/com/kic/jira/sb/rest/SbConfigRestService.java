@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -25,8 +26,11 @@ import com.atlassian.jira.project.Project;
 import com.atlassian.jira.project.ProjectManager;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.kic.jira.sb.ao.SbInteConfig;
 import com.kic.jira.sb.service.SbConfigService;
+import com.kic.jira.sb.service.SbIntegrationConfigService;
 import com.kic.jira.sb.vo.SbConfigVo;
+import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 
 @Scanned 
 @Path("config")
@@ -34,16 +38,27 @@ public class SbConfigRestService {
 	private static final Logger logger = LoggerFactory.getLogger(SbConfigRestService.class);
 	
 	private final SbConfigService sbConfigService;
+	private final SbIntegrationConfigService sbIntegrationConfigService;
 	private final ProjectManager projectManager;
 	
 	public SbConfigRestService(SbConfigService sbConfigService,
+							   SbIntegrationConfigService sbIntegrationConfigService,
 							   @ComponentImport ProjectManager projectManager) {
 		this.sbConfigService = sbConfigService;
+		this.sbIntegrationConfigService = sbIntegrationConfigService;
 		this.projectManager = projectManager;
 	}	
 	
 	
+	//프로젝트의 smartbuilder 연계목록 (특정 프로젝트 선택 > SmartBuilder Integration 메뉴)
+	@GET
+    @Path("/integration/list/{projectKey}")
+	@Produces({MediaType.APPLICATION_JSON})	
+	public List<SbIntegrationConfigVo> getSbIntegrationList(@PathParam("projectKey") String projectKey) throws Exception { 	
+		return sbIntegrationConfigService.getListSbIntegrationConfig(projectKey);
+	}
 	
+	//sofwtare 유형 프로젝트의 customfield 가져오기
 	@GET
     @Path("/sw/project/cf/list")
 	@Produces({MediaType.APPLICATION_JSON})	

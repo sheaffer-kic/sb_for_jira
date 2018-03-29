@@ -7,7 +7,7 @@ import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 
 public interface SbIntegrationConfigService {
 
-	public List<SbInteConfig> getListSbIntegrationConfig(String projectKey) throws Exception;
+	public List<SbIntegrationConfigVo> getListSbIntegrationConfig(String projectKey) throws Exception;
 	public SbIntegrationConfigVo getSelectSbIntegrationConfig(String projectKey, String issueType) throws Exception;//smart builder에서 호출하여사용 및 중복체크여부 사용
 	public SbIntegrationConfigVo getSelectSbIntegrationConfig(int id) throws Exception;
 	public SbInteConfig setInsertSbIntegrationConfig(SbIntegrationConfigVo sbIntegrationConfigVo) throws Exception;

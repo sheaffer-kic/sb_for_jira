@@ -35,6 +35,13 @@
 		<resource type="download" name="sb-config.soy.js" location="/templates/admin/sb-config.soy"/>
 	</web-resource>
     
+	<web-resource key="wr-sb-inte-config-soy-template">
+		<dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
+		<transformation extension="soy">
+			<transformer key="soyTransformer"/>
+		</transformation>
+		<resource type="download" name="sb-integration-config.soy.js" location="/templates/admin/sb-integration-config.soy"/>
+	</web-resource>      
     
     <!-- issue>right menu -->
     <web-resource key="wr-build-result-resources" name="wr-build-result-resources">
@@ -160,6 +167,7 @@
 	<!--  project config area. -->  	      		  	
 	<web-section key="ws-sb-integration-config" name="ws-sb-integration-config" location="atl.jira.proj.config" weight="150">
 		<description>Setting SmartBuilder Project</description>
+		<condition class="com.kic.jira.sb.conditions.BuildResultConditions" />		
 <!-- 		<condition class="com.atlassian.jira.plugin.webfragment.conditions.JiraGlobalPermissionCondition">
 			<param name="permission">admin</param>
 		</condition> -->	
@@ -178,7 +186,7 @@
   		<description>Setting SmartBuilder Project</description>
   		<actions>
 			<action name="com.kic.jira.sb.webwork.SbIntegrationConifgWebWork"
-			        alias="SbIntegrationConfig">
+			        alias="SbIntegrationConfig" roles-required="admin">
   				<view name="success">templates/admin/sb-integration-config.vm</view>		
 			</action>			
   		</actions>
@@ -188,48 +196,4 @@
   	<rest name="SmartBuilder Rest Resource" i18n-name-key="sb-rest-resource.name" key="sb-rest-resource" path="/sb" version="1.0">
     	<description>The SmartBuilder Resource Plugin</description>
   	</rest> 
-  	
-  	
-  	
-  	<!--  for test -->
-<!--     <web-resource key="wr-global-resource" name="wr-global-resource">
-        <transformation extension="js">
-            <transformer key="jsI18n" />
-        </transformation>
-            
-    	<dependency>com.atlassian.auiplugin:ajs</dependency>
-    	<resource type="download" name="sb-global.js" location="/js/sb-global.js"/>
-	    <context>atl.general</context>
-	    <context>atl.admin</context>
-    </web-resource> -->
-    
-    <!--  contextPath/plugins/servlet/todo/list-->
-<!-- 	<servlet name="ao-tutorial-statge" class="com.kic.jira.sb.listener.TodoServlet" key="test">
-        <url-pattern>/todo/list</url-pattern>
-    </servlet>
-      	 -->
-      	
-  	   	
-  	<!-- profile > tools -->
-<!-- 	<web-item key="wi-sb-message" name="wi-sb-message"
-				section="system.user.profile.links/operations" 
-				weight="900">
-		<description>SmartBuilder</description>				
-		<label>SmartBuilder</label>
-		<link linkId="wi-sb-config-id2">
-				/secure/admin/SbConfig!default.jspa
-		</link>
-	</web-item>  -->
-	
-	<!-- top navigation -->
-<!-- 	<web-item key="wi-sb-message" name="wi-sb-message"
-				section="system.top.navigation.bar" 
-				weight="900">			
-		<label>SmartBuilder2</label>
-		<link linkId="wi-sb-config-id2">
-				/secure/admin/SbMessage!default.jspa
-		</link>
-	</web-item>	
- -->
-    
 </atlassian-plugin>

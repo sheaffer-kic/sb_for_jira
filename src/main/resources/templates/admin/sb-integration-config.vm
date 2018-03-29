@@ -9,8 +9,30 @@
         <meta name="admin.active.section" content="atl.jira.proj.config"/> 
         <meta name="projectKey" content="${projectKey}"/>   
 		$webResourceManager.requireResourcesForContext("sb-integration-config-plugin")
+		$webResourceManager.requireResource("com.kic.jira.sb-plugin:wr-sb-inte-config-soy-template" )
     </head>
     <body>
- 		#parse("templates/admin/sb-integration-config-content.vm")
+ 		##parse("templates/admin/sb-integration-config-content.vm")
+ 		
+ 		<section role="dialog" id="add-dialog" class="aui-layer aui-dialog2 aui-dialog2-medium" aria-hidden="true" data-aui-modal="true">
+ 		</section>
+		<div class="aui-page-panel-inner">
+			<section class="aui-page-panel-content">
+			    <header class="aui-page-header">
+			        <div class="aui-page-header-inner">
+			            <div class="aui-page-header-main">
+			                <h2>SmartBuild Integration Configuration</h2>
+			            </div>
+			        </div>
+			    </header>
+		        <div align="right">
+					<button id="add-integration-button" class="aui-button">
+						<span class="aui-icon aui-icon-small aui-iconfont-add"></span> Add Integration
+					</button>
+		        </div>
+			</section><!-- .aui-page-panel-content -->
+		</div><!-- .aui-page-panel-inner --> 		
+ 		
+ 		<div id="tbody"></div>
     </body>
 </html>

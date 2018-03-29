@@ -33,7 +33,7 @@ public class SbIntegrationConfigServiceImpl implements SbIntegrationConfigServic
 	}
 
 	@Override
-	public List<SbInteConfig> getListSbIntegrationConfig(String projectKey) throws Exception{
+	public List<SbIntegrationConfigVo> getListSbIntegrationConfig(String projectKey) throws Exception{
 		return sbIntegrationConfigDAO.listSbIntegrationConfig(projectKey);
 	}	
 
