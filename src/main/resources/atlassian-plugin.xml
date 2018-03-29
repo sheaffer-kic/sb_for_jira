@@ -111,7 +111,7 @@
   			location="atl.jira.view.issue.right.context" weight="100">
 	  	<label>SmartBuilder</label>
 	    <description>SmartBuilder for Jira Plugin</description>	
-	    <context-provider class="com.kic.jira.sb.webpanel.BuildResultContextProvider"/>    
+	    <context-provider class="com.kic.jira.sb.webpanel.BuildResultContextProvider"/>  
 	    <resource name="view" type="velocity" location="templates/issue/build-result.vm"/>
 	    <condition class="com.kic.jira.sb.conditions.BuildResultConditions" /><!-- 파라메터로 buiss type -->
 	</web-panel>  

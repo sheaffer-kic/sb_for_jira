@@ -46,21 +46,24 @@ public class BuildResultContextProvider implements ContextProvider{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 
 	@Override
 	public Map<String, Object> getContextMap(Map<String, Object> context) {	
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
+
 		try {
 				//get issue, SBprojectId(CustomField)
 				Issue currentIssue = (Issue)context.get("issue");
 				String issue_key = currentIssue.getKey();	
-				
+			
 				SbConfigVo sbConfigVo = sbConfigService.getSelectSbConfig();	
 				if(sbConfigVo.getID() == 0){
 					rtnMap.put("sbError", "Please register : Adminstrations > Smart Builder > Smart Builder Configuration");//i18
 					return rtnMap;					
 				}
-
+	
 				String sbProjectName = customFieldManager
 									   .getCustomFieldObject(sbConfigVo.getSbCfId())
 									   .getValueFromIssue(currentIssue);
@@ -71,13 +74,13 @@ public class BuildResultContextProvider implements ContextProvider{
 					rtnMap.put("sbError", "Check your " + sbConfigVo.getSbCfName().substring(sbConfigVo.getSbCfName().indexOf("|") + 1) + " value of Issue");//i18
 					return rtnMap;	
 				}
-				
+			
 				JSONObject jObj = new JSONObject();
 				jObj.put("tagName", issue_key);
 				jObj.put("projectName", sbProjectName);
 				jObj.put("userId", sbConfigVo.getSbId());
 				jObj.put("userPw", sbConfigVo.getSbPassword());	
-				
+
 				Map<String, Object> httpMap = new HashMap<String, Object>();
 				
 				///jobUrl
@@ -85,13 +88,24 @@ public class BuildResultContextProvider implements ContextProvider{
 				httpMap.put("sendData", jObj);
 				HttpResponse response = SbPluginUtil.postHttpResponseForSb(httpMap, SB_BUILD_RESULT_REST);
 				
+				/*
+				System.out.println("tagName====>"+jObj.get("tagName"));
+				System.out.println("projectName====>"+jObj.get("projectName"));
+				System.out.println("userId====>"+jObj.get("userId"));
+				System.out.println("userPw====>"+jObj.get("userPw"));
+				*/	
+				//System.out.println("response.toString()=====>"+response.toString());
+				
 		        int respCode = response.getStatusLine().getStatusCode();   
 		        String responseBody = EntityUtils.toString(response.getEntity());
 		        logger.debug("statuscode : " + respCode);
+		        
+		        
 		        if (respCode / 100 != 2) {//200 번대가 아니면 오류      	
 		        	rtnMap.put("sbError", "ResponseCode : " + respCode + " [" + responseBody + "]");
 		        	return rtnMap;
 		        }
+
 		        
 		        
 		        JSONObject jsonObj = new JSONObject(responseBody);			       
@@ -102,8 +116,12 @@ public class BuildResultContextProvider implements ContextProvider{
 					return rtnMap; 
 				}
 				
+				//System.out.println("jsonObj.getString(list)===========>"+jsonObj.getString("list"));
+				
 				JSONArray sbList = new JSONArray(jsonObj.getString("list"));
 				List<Map<String, String>> logList = new ArrayList<Map<String, String>>();
+
+				//System.out.println("sbList.length()====>"+sbList.length());				
 				
 				//JSONArray sbList = new JSONArray(jsonResponse.getString("list"));
 				for (int i=0; i < sbList.length(); i++) {
