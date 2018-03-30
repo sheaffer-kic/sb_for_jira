@@ -1,5 +1,6 @@
 package com.kic.jira.sb.rest;
 
+import java.util.ArrayList;
 /**
  * JIRA->SmartBuilder 로 요청 (빌드프로젝트 목록, 빌드)
  * 빌드결과 저장
@@ -44,7 +45,6 @@ import com.kic.jira.sb.util.SbPluginUtil;
 import com.kic.jira.sb.vo.SbConfigVo;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 import com.kic.jira.sb.vo.SbProjectVo;
-
 
 @Scanned 
 @Path("build")
@@ -294,4 +294,62 @@ public class BuildRestService {
 		}
 		return rtnMap;
 	}	
+	
+
+	//localhost:2990/jira/rest/sb/1.0/build/resultStep/
+	@POST
+    @Path("/resultStep")
+	@Produces({MediaType.APPLICATION_JSON})	
+	public Map<String, Object> getBuildResultStep(String param) throws Exception {	
+		JSONObject json = new JSONObject(param);
+		String projResultId = json.getString("projResultId");
+		System.out.println("getBuildResultStep projResultId!!!!!!!!!!!!!!!!!!!!!!==>"+projResultId);
+    	
+	/*	
+		{
+			"result": "ok",
+			"list": [{
+					"stepName": "step01",
+					"stepId": 51,
+					"stepResult": "P",
+					"stepResultId": 1414
+				}, {
+					"stepName": "Copy of step02",
+					"stepId": 53,
+					"stepResult": "P",
+					"stepResultId": 1415
+				}
+			]
+		}
+	*/	
+		
+
+		
+		
+		
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("stepName", "step01");
+		data.put("stepId", "51");
+		data.put("stepResult", "P");
+		data.put("stepResultId", "1414");
+		
+		ArrayList list = new ArrayList();
+		list.add(data);
+		
+		Map<String, String> data2 = new HashMap<String, String>();
+		data2.put("stepName", "Copy of step02");
+		data2.put("stepId", "53");
+		data2.put("stepResult", "P");
+		data2.put("stepResultId", "1415");
+		list.add(data2);
+		
+		
+    	Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("result", "ok");
+		rtnMap.put("list", list);
+		
+	return rtnMap;
+	}
+
+
 }
