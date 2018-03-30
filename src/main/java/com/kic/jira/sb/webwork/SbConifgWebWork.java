@@ -1,7 +1,12 @@
 package com.kic.jira.sb.webwork;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +18,7 @@ import com.atlassian.jira.util.json.JSONObject;
 import com.atlassian.jira.web.action.JiraWebActionSupport;
 import com.atlassian.plugin.spring.scanner.annotation.component.Scanned;
 import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import com.kic.jira.sb.rest.BuildRestService;
 import com.kic.jira.sb.service.SbConfigService;
 import com.kic.jira.sb.util.SbPluginUtil;
 import com.kic.jira.sb.vo.SbConfigVo;
@@ -25,6 +31,9 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 	
 	private final CustomFieldManager customFieldManager;
 	private final SbConfigService sbConfigService;
+
+	
+	private String projResultId;//smartbuilder build id request build-result.vm
 	
 	public SbConifgWebWork(@ComponentImport CustomFieldManager customFieldManager,
 						   SbConfigService sbConfigService) {
@@ -37,8 +46,20 @@ public class SbConifgWebWork extends JiraWebActionSupport {
 	 * (non-Javadoc)
 	 * @see webwork.action.ActionSupport#doDefault()
 	 */
-	public String doDefault() {		
+	public String doDefault() {	
+		
+		HttpServletRequest request = ServletActionContext.getRequest();
+		projResultId = request.getParameter("projResultId");
+		
+		//System.out.println("doDefault projResultId=====>" + projResultId);
+		
+	
 		return "success";	
+	}	
+	
+	public String getProjResultId() {
+			
+		return this.projResultId;
 	}	
 	
 	public void doInsert() {
