@@ -136,9 +136,49 @@ var SB_CONFIG = {
 				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
 			}				
 		});	
-	}
+	},
+
 	
-	,
+	fn_setBuildResultStep: function () {
+		var url = contextPath + "/rest/sb/1.0/build/resultStep";
+		var obj = new Object();	
+		obj.projResultId = AJS.$('#projResultId').val();
+		console.log("obj ::::::::> " + JSON.stringify(obj));
+		
+		AJS.$.ajax({
+			type: 'POST',		
+			url: url,
+			data: JSON.stringify(obj),	
+	        //dataType: "json",     
+	        contentType: "application/json; charset=utf-8", 			
+			success: function(data, textStatus, response) {
+				//console.log("data=====>"+JSON.stringify(data));
+				console.log("data.list.length=====>"+data.list.length);
+
+				var active = "";
+				var tabTag = "";
+				for (var i=0; i < data.list.length; i++) {
+					if(i==0){
+						active = "active-tab";
+					}
+					tabTag = tabTag + "<li class='menu-item "+active+"'>"+
+					"<a href='#tabs"+i+"'>"+data.list[i].stepName+"</a>"+
+					"</li>";
+					
+					active = "";
+				}
+
+				console.log("tabTag=====>"+tabTag);
+				
+				AJS.$("ul").html(tabTag);	
+		
+			},
+			error :function(response, textStatus, errorThrown) {
+				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
+			}				
+		});	
+	},	
+
 	fn_init: function () {
 		var url = contextPath + "/rest/sb/1.0/config/info";
 		$.ajax({
@@ -153,6 +193,8 @@ var SB_CONFIG = {
 				SB_CONFIG.sb_project(data.sbCfName);
 				
 				SB_CONFIG.fn_setEvent();
+				
+				
 			},
 			error :function(response, textStatus, errorThrown) {
 				console.log("code:"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
@@ -184,6 +226,8 @@ var SB_CONFIG = {
 	AJS.toInit(function(){
 		var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
 		SB_CONFIG.fn_init();
+		SB_CONFIG.fn_setBuildResultStep();
+		
 	});
 })(AJS.$);
 
