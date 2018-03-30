@@ -1,0 +1,70 @@
+{namespace kic.sb.build.log}
+
+/**
+ * description
+ * @param sbList
+ */
+{template .list}
+<div>
+	{foreach $list in $sbList}
+		{foreach $log in $list}
+			<a href="#" id="sb-log{index($list)}{index($log)}" sb-proj-result-id="{$log.sbProjResultId}" >
+			<span class='square-box-{$log.sbProjResult}'/>
+			<span class="tooltiptext">
+				&nbsp;&nbsp;BuildId : {$log.sbProjResultId}
+			</span></a>	&nbsp;
+		{/foreach}
+		<br/>
+	{/foreach}	
+</div>
+
+{/template}
+
+
+/**
+ * description
+ * @param stepFirst
+ * @param stepList
+ */
+{template .content}	
+	<li class="menu-item active-tab">
+	    <a href="#tabs-first" id="sb-step{$stepFirst.stepId}" sresult-id="{$stepFirst.stepResultId}">{$stepFirst.stepName}</a>
+	</li>
+	
+	{foreach $list in $stepList}
+		<li class="menu-item">
+		    <a href="#tabs-first" id="sb-step{$list.stepId}" sresult-id="{$list.stepResultId}">{$list.stepName}</a>
+		</li>	
+	{/foreach}
+{/template}
+
+
+
+/**
+ * description
+ */
+{template .content3}
+<div>
+	<div class="aui-tabs horizontal-tabs">
+	    <ul class="tabs-menu">
+	        <li class="menu-item active-tab">
+	            <a href="#tabs-example-first">Tab 1</a>
+	        </li>
+	        <li class="menu-item">
+	            <a href="#tabs-example-second">Tab 2</a>
+	        </li>
+	    </ul>
+
+	    <div class="tabs-pane active-pane" id="tabs-example-first">
+	        <h2>This is tab 1</h2>
+	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	    </div>
+	    <div class="tabs-pane" id="tabs-example-second">
+	        <h2>This is tab 2</h2>
+	        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+	    </div>
+
+	</div>
+</div>
+
+{/template}

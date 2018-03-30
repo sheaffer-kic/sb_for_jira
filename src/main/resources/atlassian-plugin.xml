@@ -41,8 +41,8 @@
 			<transformer key="soyTransformer"/>
 		</transformation>
 		<resource type="download" name="sb-integration-config.soy.js" location="/templates/admin/sb-integration-config.soy"/>
-	</web-resource>      
-    
+	</web-resource>     
+	    
     <!-- issue>right menu -->
     <web-resource key="wr-build-result-resources" name="wr-build-result-resources">
          <transformation extension="js">
@@ -107,6 +107,7 @@
         <description>The module configuring the Active Objects service used by this plugin</description>
         <entity>com.kic.jira.sb.ao.SbConfig</entity>
         <entity>com.kic.jira.sb.ao.SbInteConfig</entity>
+        <entity>com.kic.jira.sb.ao.SbResult</entity>
     </ao> 
 
     <!-- key name 규칙 추후... 일단 sb포함 -->
@@ -196,4 +197,38 @@
   	<rest name="SmartBuilder Rest Resource" i18n-name-key="sb-rest-resource.name" key="sb-rest-resource" path="/sb" version="1.0">
     	<description>The SmartBuilder Resource Plugin</description>
   	</rest> 
+  	
+  	
+  	
+	<web-item key="wi-sb-build-log" >
+		<link>
+			/projects/$pathEncodedProjectKey?selectedItem=build-log:page
+		</link>
+	</web-item> 	
+			
+	<web-panel key="wp-sb-build-log" location="build-log:page">
+	    <resource type="velocity" name="view" location="templates/issue/build-log.vm"/>
+	    <context-provider class="com.kic.jira.sb.webpanel.BuildLogContextProvider"/>	    
+	</web-panel>
+	
+	<web-resource key="wr-sb-build-log-soy-template">
+		<dependency>com.atlassian.soy.soy-template-plugin:soy-deps</dependency>
+		<transformation extension="soy">
+			<transformer key="soyTransformer"/>
+		</transformation>
+		
+		<resource type="download" name="build-log.soy.js" location="/templates/issue/build-log.soy"/>
+	</web-resource>  	
+	
+    <web-resource key="wr-sb-build-log-resources" name="wr-sb-build-log-resources">
+         <transformation extension="js">
+            <transformer key="jsI18n" />
+        </transformation>
+
+		<dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="build-log.js" location="/js/build-log.js"/>
+		<resource type="download" name="build-result.css" location="/css/build-result.css"/>             
+    </web-resource>
+    	
+
 </atlassian-plugin>

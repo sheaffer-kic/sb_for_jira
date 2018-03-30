@@ -1,19 +1,10 @@
 #foreach($list in $sbList)
 	#foreach($log in $list)
-		#if($log.projResult.indexOf("2") > 0)
-			<a>
-		#else
-			<!--a target="_blank" href="$url?resultId=$log.projResultId"-->
-			<a id="{$log.projResultId}">			
-		#end		
-			<span class='square-box-$log.projResult'/>
-			<span class="tooltiptext">
-				&nbsp;&nbsp;#$log.projResultId <br/> 
-				&nbsp;&nbsp;start time : $log.startTime <br/>
-				&nbsp;&nbsp;run time : $log.runTime
-			</span>
-		</a>
-				
+		<a target="_blank" href="projects/$projectKey?selectedItem=build-log:page&projResultId=$log.sbProjResultId&issueKey=$issueKey">
+		<span class='square-box-$log.sbProjResult'/>
+		<span class="tooltiptext">
+			&nbsp;&nbsp;BuildId : $log.sbProjResultId
+		</span></a>
 	#end
 	<br/>
 #end

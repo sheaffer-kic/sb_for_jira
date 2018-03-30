@@ -1,10 +1,10 @@
 package com.kic.jira.sb.rest;
 
-import java.util.ArrayList;
 /**
  * JIRA->SmartBuilder 로 요청 (빌드프로젝트 목록, 빌드)
  * 빌드결과 저장
  */
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,10 +41,13 @@ import com.atlassian.sal.api.UrlMode;
 import com.atlassian.sal.api.user.UserManager;
 import com.kic.jira.sb.service.SbConfigService;
 import com.kic.jira.sb.service.SbIntegrationConfigService;
+import com.kic.jira.sb.service.SbResultService;
 import com.kic.jira.sb.util.SbPluginUtil;
 import com.kic.jira.sb.vo.SbConfigVo;
 import com.kic.jira.sb.vo.SbIntegrationConfigVo;
 import com.kic.jira.sb.vo.SbProjectVo;
+import com.kic.jira.sb.vo.SbResultVo;
+
 
 @Scanned 
 @Path("build")
@@ -70,6 +73,7 @@ public class BuildRestService {
 	
 	private final SbConfigService sbConfigService;
 	private final SbIntegrationConfigService sbInteConfigService;
+	private final SbResultService sbResultService;
 	
 	//private final TestDAO testDAO;
 	
@@ -81,7 +85,8 @@ public class BuildRestService {
 								@ComponentImport UserManager userManager,
 								@ComponentImport ApplicationProperties applicationProperties,
 								SbConfigService sbConfigService,
-								SbIntegrationConfigService sbInteConfigService) {
+								SbIntegrationConfigService sbInteConfigService,
+								SbResultService sbResultService) {
 		this.projectManager = projectManager;
 		this.issueManager = issueManager;
 		this.issueService = issueService;
@@ -91,6 +96,7 @@ public class BuildRestService {
 		this.applicationProperties = applicationProperties;
 		this.sbConfigService = sbConfigService;
 		this.sbInteConfigService = sbInteConfigService;
+		this.sbResultService = sbResultService;
 	}
 	
 	
@@ -249,7 +255,7 @@ public class BuildRestService {
 	
 	
 	//http://localhost:2990/jira/rest/sb/1.0/build/update/result
-	//Update build result (빌드중, 빌드실패, 빌드 성공)
+	//Update build result (빌드중, 빌드실패, 빌드 성공)  및  projResult에 대한 정보도  저장... (issueKey, sbProjResultId, sbProjResult)
 	@POST
     @Path("/update/result")
 	@Produces({MediaType.APPLICATION_JSON})
@@ -266,7 +272,11 @@ public class BuildRestService {
 		
 		String flag = jsonObj.getString("flag");		
 		int actionId = -1;
-		if (flag.equals(BUILD_STATUS_ING)) actionId = sbVo.getBuildProgressAction();  //빌드중
+		boolean doInsert = false;
+		if (flag.equals(BUILD_STATUS_ING)) {
+			actionId = sbVo.getBuildProgressAction();  //빌드중
+			doInsert = true;
+		}
 		else if (flag.equals(BUILD_STATUS_SUCCESS))actionId = sbVo.getBuildSuccessId(); //빌드성공
 		else if (flag.equals(BUILD_STATUS_FAIL)) actionId = sbVo.getBuildFailId(); //빌드실패
 		
@@ -285,17 +295,33 @@ public class BuildRestService {
 			if (!transitionResult.isValid()) {
 				rtnMap.put("result", "fail");				
 				rtnMap.put("message", "[" + actionId  + "] Transition is not executed !!!");
+				return rtnMap;
 			}
 
 		} else {
 			rtnMap.put("result", "fail");
 			rtnMap.put("message", "Your Issue Status cannot execute [" + actionId + "]");
 			//rtnMap.put("i18nResolver.getText(TRANSITION_IMPOSSIBLE));
+			return rtnMap;
 		}
+		
+		//SbResult 에 데이터 insert or update
+		if (doInsert) { //진행중일경우
+			SbResultVo vo = new SbResultVo();
+			vo.setIssueKey(issueKey);;
+			vo.setSbProjResult(flag);
+			vo.setSbProjResultId(jsonObj.getInt("projResultId"));
+			sbResultService.setInsertSbResult(vo);
+		} else { //update
+			SbResultVo vo = sbResultService.getSelectSbResultBySbResult(jsonObj.getString("issueKey"), "I");
+			sbResultService.setUpdateSbResult(flag, vo.getID());
+		}
+		//@Transactional
 		return rtnMap;
 	}	
 	
-
+	
+	
 	//localhost:2990/jira/rest/sb/1.0/build/resultStep/
 	@POST
     @Path("/resultStep")
@@ -348,8 +374,6 @@ public class BuildRestService {
 		rtnMap.put("result", "ok");
 		rtnMap.put("list", list);
 		
-	return rtnMap;
-	}
-
-
+		return rtnMap;
+	}	
 }

@@ -91,8 +91,12 @@ var SB_INCLUDER = {
     				if (data.result == "ok") {
     					obj = new Object();
     					obj.issueKey = data.issueKey;
+    					obj.projResultId = data.message;
     					obj.flag = "I"; //빌드중 (ㅑ), 빌드성공(ㅖ), 빌드실패(F) 3가지가 있으면, 여기서는 빌드중
     					url = contextPath + "/rest/sb/1.0/build/update/result";
+    					
+    					
+    					console.log("objresutl### : " + JSON.stringify(obj));
 
     					$.ajax({
     		    			type: 'POST',

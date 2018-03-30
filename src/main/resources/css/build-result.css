@@ -1,6 +1,6 @@
 
 
-	.square-box-S1{
+	.square-box-P{
 	    display: inline-block;
 	    width: 20px;
 	    height: 20px;
@@ -10,7 +10,7 @@
 	    padding:2px;	
 	}
 
-	.square-box-F1{
+	.square-box-F{
 	    display: inline-block;
 	    width: 20px;
 	    height: 20px;

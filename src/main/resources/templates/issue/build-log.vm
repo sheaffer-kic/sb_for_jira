@@ -1,0 +1,23 @@
+
+##enable_html_escaping()
+<html>
+    <head>
+        <title>Bulk Update</title>
+        <meta name="projectKey" content="${projectKey}"/>     
+        <meta name="issueKey" content="${issueKey}"/>
+        <meta name="sbProjResultId" content="${sbProjResultId}"/>
+		$webResourceManager.requireResource("com.kic.jira.sb-plugin:wr-sb-build-log-soy-template")
+		$webResourceManager.requireResource("com.kic.jira.sb-plugin:wr-sb-build-log-resources")
+
+    </head>
+    <body>
+ 		<h2 class="custom-apps-title formtitle"> ${issueSummary} - logs <span id="sb-title" ></span></h2>
+ 		<div id="sb-log-top" style="margin:10px;"></div>
+		<div id="sb-steps-tabs" class="aui-tabs horizontal-tabs">
+		    <ul class="tabs-menu" id="sb-tab1">        
+		    </ul>		    
+		    <div class="tabs-pane active-pane" id="tabs-first">
+		    </div>
+		</div>
+    </body>
+</html>
