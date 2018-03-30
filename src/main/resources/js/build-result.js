@@ -1,3 +1,4 @@
+/*
 var SB_CONFIG = {	
 
 	fn_init: function () {
@@ -20,4 +21,4 @@ var SB_CONFIG = {
 		SB_CONFIG.fn_init();
 	});
 })(AJS.$);
-
+*/

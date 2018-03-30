@@ -170,7 +170,7 @@ var SB_CONFIG = {
 
 				console.log("tabTag=====>"+tabTag);
 				
-				AJS.$("ul").html(tabTag);	
+				//AJS.$("ul").html(tabTag);	
 		
 			},
 			error :function(response, textStatus, errorThrown) {
