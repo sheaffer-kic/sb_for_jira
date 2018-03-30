@@ -3,7 +3,8 @@
 		#if($log.projResult.indexOf("2") > 0)
 			<a>
 		#else
-			<a target="_blank" href="$url?resultId=$log.projResultId">			
+			<!--a target="_blank" href="$url?resultId=$log.projResultId"-->
+			<a id="{$log.projResultId}">			
 		#end		
 			<span class='square-box-$log.projResult'/>
 			<span class="tooltiptext">
