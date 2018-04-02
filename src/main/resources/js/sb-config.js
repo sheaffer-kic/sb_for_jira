@@ -226,7 +226,7 @@ var SB_CONFIG = {
 	AJS.toInit(function(){
 		var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
 		SB_CONFIG.fn_init();
-		SB_CONFIG.fn_setBuildResultStep();
+		//SB_CONFIG.fn_setBuildResultStep();
 		
 	});
 })(AJS.$);
