@@ -3,6 +3,7 @@ var SB_BUILD_LOG = {
 		var issueKey =  AJS.$("meta[name='issueKey']").attr('content');		
 		var url = contextPath + "/rest/sb/1.0/result/list/" + issueKey;	
 
+		timeoutId = "";
 		$.ajax({
 			type: 'GET',
 			url: url ,
@@ -37,14 +38,16 @@ var SB_BUILD_LOG = {
 			for (var j=0; j < iLen3; j++) {
 				var s = i + "";
 				$("#sb-log" + s.concat(j)).click(function () {
-					var obj = $("#" + this.id);
+					var obj = $("#" + this.id);					
 					SB_BUILD_LOG.fn_viewStep(obj.attr("sb-proj-result-id"));
 				});
 			}
 		}		
 
 		AJS.$('#sb-steps-tabs').on('tabSelect', function(e) {
-			SB_BUILD_LOG.fn_viewLog(e.target.getAttribute("sresult-id"));
+			clearTimeout(timeoutId);
+			$("#tabs-first").empty();
+			SB_BUILD_LOG.fn_viewLog(e.target.getAttribute("sresult-id"), 1);
 		});		
 		
 		SB_BUILD_LOG.fn_viewStep(AJS.$("meta[name='sbProjResultId']").attr('content'));
@@ -52,8 +55,8 @@ var SB_BUILD_LOG = {
 	
 	,
 	fn_viewStep: function (sbProjResultId) {
-		//smartBuilder쪽의 step가져오면 됨.
-		var url = contextPath + "/rest/sb/1.0/result/test";
+		//smartBuilder쪽의 step가져오면 됨.  (SbResultRestService.java => test method)
+		var url = contextPath + "/rest/sb/1.0/result/test/" + sbProjResultId;
 
 		$("#sb-title").empty();
 		$("#sb-title").append(" (" + sbProjResultId + ")");
@@ -62,16 +65,17 @@ var SB_BUILD_LOG = {
 			url: url ,
 			async: false,
 			success: function(data, textStatus, response) {
-				var obj = new Object();
-			    
+				var obj = new Object();			    
 			    obj.stepFirst = data[0];
 			    obj.stepList = data.splice(1);
 			    
 			    $("#sb-tab1").empty();
 			    $('#sb-tab1').append(kic.sb.build.log.content(obj, ''));
 			
-		        SB_BUILD_LOG.fn_viewLog(obj.stepFirst.stepResultId);		        
-		        //setTimeout("SB_BUILD_LOG.fn_viewLog('aaaaa')", 10000); 
+			    clearTimeout(timeoutId);
+			    $("#tabs-first").empty();
+			    SB_BUILD_LOG.fn_viewLog(obj.stepFirst.stepResultId, 1);
+		        
 			},
 			error :function(response, textStatus, errorThrown) {
 				alert("code33 :"+response.status+"\n"+"message:"+response.responseText+"\n"+"error:"+errorThrown);
@@ -79,19 +83,23 @@ var SB_BUILD_LOG = {
 		}); 
 		
 	}
-	
-	
-	,
-	fn_viewLog: function (sbStepResultId) {
-		//선택한 스텝의 상세 로그정보를 보여준다. (smartBuilder 에서 가져와야 함)
-		$("#tabs-first").empty();
-		$("#tabs-first").append(sbStepResultId);
-	}
 
+	,
+	fn_viewLog: function (sbStepResultId, pageIdx) {
+		//smartBuilder 에서 로그정보 가져와야 함.
+		$("#tabs-first").append(sbStepResultId  + ", pageIdx : " + pageIdx + "<br/>");
+		
+		/* 50개씩 로그정보 가져오기.. 3000 : 3초 마다 다시 호출됨. */
+		pageIdx++;
+		timeoutId = setTimeout("SB_BUILD_LOG.fn_viewLog('" + sbStepResultId + "','" + pageIdx + "')", 3000); //3초
+	}
 };
+
 (function ($) {
 	AJS.toInit(function() {		
 		var contextPath = AJS.$("meta[name='ajs-context-path']").attr('content');
+		var timeoutId = "";
+		
 		SB_BUILD_LOG.fn_init();		
 	});
 	

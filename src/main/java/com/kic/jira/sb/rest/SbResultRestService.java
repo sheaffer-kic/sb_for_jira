@@ -52,33 +52,33 @@ public class SbResultRestService {
 	
 	//localhost:2990/jira/rest/sb/1.0/result/test
 	@GET
-    @Path("/test")
+    @Path("/test/{sbProjResultId}")
 	@Produces({MediaType.APPLICATION_JSON})	
-	public List<Map<String, Object>> test() throws Exception {
+	public List<Map<String, Object>> test(@PathParam("sbProjResultId") String sbProjResultId) throws Exception {
 		List<Map<String, Object>> rtnList = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("stepId", "s01");
 		map.put("stepName", "stepName01");
-		map.put("stepResultId", "r01");
+		map.put("stepResultId", sbProjResultId + "_"  + "1");
 		rtnList.add(map);
 		
 		map = new HashMap<String, Object>();		
 		map.put("stepId", "s02");
 		map.put("stepName", "stepName02");
-		map.put("stepResultId", "r02");
+		map.put("stepResultId", sbProjResultId + "_"  + "2");
 		rtnList.add(map);
 		
 		map = new HashMap<String, Object>();		
 		map.put("stepId", "s03");
 		map.put("stepName", "stepName03");
-		map.put("stepResultId", "r03");
+		map.put("stepResultId", sbProjResultId + "_"  + "3");
 		rtnList.add(map);
 		
 		map = new HashMap<String, Object>();		
 		map.put("stepId", "s04");
 		map.put("stepName", "stepName04");
-		map.put("stepResultId", "r04");
+		map.put("stepResultId", sbProjResultId + "_"  + "4");
 		rtnList.add(map);
 		
 		return rtnList;
